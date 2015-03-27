@@ -91,6 +91,7 @@
     X(SATPdll) \
     X(SATSdll) \
     X(SATTdll) \
+    X(SATTPdll) \
     X(SATSPLNdll) \
     X(SETAGAdll) \
     X(SETKTVdll) \
@@ -248,6 +249,7 @@ extern "C" {
     typedef void (CALLCONV SATPdll_TYPE)(double *,double *,long *,double *,double *,double *,double *,double *,long *,char*,long );
     typedef void (CALLCONV SATSdll_TYPE)(double *,double *,long *,long *,long *,double *,double *,double *,long *,double *,double *,double *,long *,double *,double *,double *,long *,char*,long );
     typedef void (CALLCONV SATTdll_TYPE)(double *,double *,long *,double *,double *,double *,double *,double *,long *,char*,long );
+    typedef void (CALLCONV SATTPdll_TYPE)(double *,double *,double*,long *,long*,double *,double *,double *,double *,double *,double *, long *,char*,long );    
     typedef void (CALLCONV SATSPLNdll_TYPE)(double *,long *,char*,long );
     typedef void (CALLCONV SETAGAdll_TYPE)(long *,char*,long );
     typedef void (CALLCONV SETKTVdll_TYPE)(long *,long *,char*,double *,char*,long *,char*,long ,long ,long );
