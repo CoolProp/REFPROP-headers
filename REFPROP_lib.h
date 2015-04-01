@@ -100,7 +100,7 @@
     X(SETREFdll) \
     X(SETUPdll) \
     X(SPECGRdll) \
-    X(SPLNVALdll) \    
+    X(SPLNVALdll) \
     X(SUBLPdll) \
     X(SUBLTdll) \
     X(SURFTdll) \
