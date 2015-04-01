@@ -100,6 +100,7 @@
     X(SETREFdll) \
     X(SETUPdll) \
     X(SPECGRdll) \
+    X(SPLNVALdll) \    
     X(SUBLPdll) \
     X(SUBLTdll) \
     X(SURFTdll) \
@@ -257,6 +258,7 @@ extern "C" {
     typedef void (CALLCONV SETMODdll_TYPE)(long *,char*,char*,char*,long *,char*,long ,long ,long ,long );
     typedef void (CALLCONV SETREFdll_TYPE)(char*,long *,double *,double *,double *,double *,double *,long *,char*,long ,long );
     typedef void (CALLCONV SETUPdll_TYPE)(long *,char*,char*,char*,long *,char*,long ,long ,long ,long );
+    typedef void (CALLCONV SPLNVALdll_TYPE)(long *, long *, double *, double *, long *, char *, long);    
     typedef void (CALLCONV SPECGRdll_TYPE)(double *,double *,double *,double *);
     typedef void (CALLCONV SUBLPdll_TYPE)(double *,double *,double *,long *,char*,long );
     typedef void (CALLCONV SUBLTdll_TYPE)(double *,double *,double *,long *,char*,long );
