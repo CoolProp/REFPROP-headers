@@ -337,31 +337,50 @@ extern "C" {
     #define XMASSdll_ARGS double *,double *,DOUBLE_REF
     #define XMOLEdll_ARGS double *,double *,DOUBLE_REF
     
-	/* Define explicit function pointers
-	 * Each will look something like: typedef void (RPCALLCONV ACTVYdll_TYPE)(ACTVYdll_ARGS);
-	 * 
-	 * The ## are needed to escape the _ character in the variable names
-	 * 
-	 * ***MAGIC WARNING**!! X Macros in use
-	 * See http://stackoverflow.com/a/148610
-	 * See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
-	 */
+	///* Define explicit function pointers
+	// * Each will look something like: typedef void (RPCALLCONV ACTVYdll_TYPE)(ACTVYdll_ARGS);
+	// * 
+	// * The ## are needed to escape the _ character in the variable names
+	// * 
+	// * ***MAGIC WARNING**!! X Macros in use
+	// * See http://stackoverflow.com/a/148610
+	// * See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
+	// */
 	#define X(name)  typedef void (RPCALLCONV name ## _TYPE)(name ## _ARGS);
 		LIST_OF_REFPROP_FUNCTION_NAMES
 	#undef X
 
-	/* Define explicit function pointers
-	 * Each will look something like: typedef RPVersion_TYPE * RPVersion_POINTER;
-	 * 
-	 * The ## are needed to escape the _ character in the variable names
-	 * 
-	 * ***MAGIC WARNING**!! X Macros in use
-	 * See http://stackoverflow.com/a/148610
-	 * See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
-	 */
+	// Define explicit function pointers
+	// Each will look something like: typedef RPVersion_TYPE * RPVersion_POINTER;
+	// 
+	// The ## are needed to escape the _ character in the variable names
+	// 
+	// ***MAGIC WARNING**!! X Macros in use
+	// See http://stackoverflow.com/a/148610
+	// See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
+	//
 	#define X(name) typedef name ## _TYPE * name ## _POINTER;
 		LIST_OF_REFPROP_FUNCTION_NAMES
 	#undef X
+
+	/* Define functions as pointers and initialise them to NULL
+    * Declare the functions for direct access
+    *
+    * Example: SETPATHdll_POINTER SETPATHdll;
+    *
+    * ***MAGIC WARNING**!! X Macros in use
+    * See http://stackoverflow.com/a/148610
+    * See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
+    */
+	#ifdef REFPROP_IMPLEMENTATION
+		#define X(name)  name ## _POINTER name;
+		 LIST_OF_REFPROP_FUNCTION_NAMES
+		#undef X
+	#else
+		#define X(name)  extern name ## _POINTER name;
+		 LIST_OF_REFPROP_FUNCTION_NAMES
+		#undef X
+	#endif
 
 #ifdef __cplusplus
 } // extern "C"
@@ -402,19 +421,6 @@ extern "C" {
     #endif
 
     enum DLLNameManglingStyle{ NO_NAME_MANGLING = 0, LOWERCASE_NAME_MANGLING, LOWERCASE_AND_UNDERSCORE_NAME_MANGLING };
-
-    /* Define functions as pointers and initialise them to NULL
-    * Declare the functions for direct access
-    *
-    * Example: SETPATHdll_POINTER SETPATHdll;
-    *
-    * ***MAGIC WARNING**!! X Macros in use
-    * See http://stackoverflow.com/a/148610
-    * See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
-    */
-    #define X(name)  name ## _POINTER name;
-     LIST_OF_REFPROP_FUNCTION_NAMES
-    #undef X
 	
 	inline std::string RPlower(std::string str)
     {
@@ -493,20 +499,6 @@ extern "C" {
 
         return true;
     }
-    /*
-    std::string get_REFPROP_fluid_path(std::string alt_refprop_path = "")
-    {
-        std::string rpPath = refpropPath;
-        
-        if (!alt_rp_path.empty()){ rpPath = alt_refprop_path; }
-        
-        #if defined(__RPISLINUX__) || defined(__RPISAPPLE__)
-            return rpPath + std::string("/fluids/");
-        #else
-            return rpPath;
-        #endif
-    }
-    */
     bool load_REFPROP(std::string &err)
     {
         // If REFPROP is not loaded
@@ -565,5 +557,6 @@ extern "C" {
     }
 
 #endif // REFPROP_IMPLEMENTATION
+
 
 #endif // REFPROP_LIB_H
