@@ -6,7 +6,7 @@
 // and Linux systems. The Windows branch should cover the
 // functions provided by the .dll and the Linux part covers
 // the compiled .so file. Name changes caused by gfortran 
-// are repsected and should be accounted for. 
+// are respected and should be accounted for. 
 
 /* See http://stackoverflow.com/a/148610
  * See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
@@ -34,7 +34,6 @@
     X(DEFLSHdll) \
     X(DHD1dll) \
     X(DHFL1dll) \
-    X(DHFL2dll) \
     X(DHFLSHdll) \
     X(DIELECdll) \
     X(DOTFILLdll) \
@@ -46,7 +45,6 @@
     X(DPTSATKdll) \
     X(DSFLSHdll) \
     X(DSFL1dll) \
-    X(DSFL2dll) \
     X(ENTHALdll) \
     X(ENTROdll) \
     X(ESFLSHdll) \
@@ -99,7 +97,6 @@
     X(SETMODdll) \
     X(SETREFdll) \
     X(SETUPdll) \
-    X(SPECGRdll) \
     X(SPLNVALdll) \
     X(SUBLPdll) \
     X(SUBLTdll) \
@@ -162,6 +159,18 @@
 #define FUNCTION_NAME(name) STR_VALUE(name)
 #define STRINGIFY(name) STR_VALUE(name)
 
+// In C++, references are done using double &, and in C, using double *
+// C++ can use C-style references or pointers
+// C can only use pointers
+#if !defined(__cplusplus) || defined(REFPROP_CSTYLE_REFERENCES)
+	// For C compilation, must do double *, long * since C doesn't understand double &, long &
+	#define DOUBLE_REF double *
+	#define LONG_REF long *
+#else
+	#define DOUBLE_REF double &
+	#define LONG_REF long &
+#endif
+
 // I'll try to follow this example from:
 // http://www.gershnik.com/tips/cpp.asp
 // function type: typedef void [compiler stuff]  func_t(int, float);
@@ -172,129 +181,187 @@ extern "C" {
 #endif
 
     // For C calling conventions, replaced all "double &" with "double *", and "long &" with "long *"
-    typedef void (RPCALLCONV RPVersion_TYPE)( char* , long);
-    typedef void (RPCALLCONV SETPATHdll_TYPE)( const char* );
-    typedef void (RPCALLCONV ABFL1dll_TYPE)(double *,double *,double *,long *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV ABFL2dll_TYPE)(double *,double *,double *,long *,long *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV ACTVYdll_TYPE)(double *,double *,double *,double *);
-    typedef void (RPCALLCONV AGdll_TYPE)(double *,double *,double *,double *,double *);
-    typedef void (RPCALLCONV CCRITdll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV CP0dll_TYPE)(double *,double *,double *);
-    typedef void (RPCALLCONV CRITPdll_TYPE)(double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV CSATKdll_TYPE)(long *,double *,long *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV CV2PKdll_TYPE)(long *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV CVCPKdll_TYPE)(long *,double *,double *,double *,double *);
-    typedef void (RPCALLCONV CVCPdll_TYPE)(double *,double *,double *,double *,double *);
-    typedef void (RPCALLCONV DBDTdll_TYPE)(double *,double *,double *);
-    typedef void (RPCALLCONV DBFL1dll_TYPE)(double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV DBFL2dll_TYPE)(double *,double *,double *,long *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV DDDPdll_TYPE)(double *,double *,double *,double *);
-    typedef void (RPCALLCONV DDDTdll_TYPE)(double *,double *,double *,double *);
-    typedef void (RPCALLCONV DEFLSHdll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV DHD1dll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *);
-    typedef void (RPCALLCONV DHFL1dll_TYPE)(double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV DHFL2dll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV DHFLSHdll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV DIELECdll_TYPE)(double *,double *,double *,double *);
-    typedef void (RPCALLCONV DOTFILLdll_TYPE)(long *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV DPDD2dll_TYPE)(double *,double *,double *,double *);
-    typedef void (RPCALLCONV DPDDKdll_TYPE)(long *,double *,double *,double *);
-    typedef void (RPCALLCONV DPDDdll_TYPE)(double *,double *,double *,double *);
-    typedef void (RPCALLCONV DPDTKdll_TYPE)(long *,double *,double *,double *);
-    typedef void (RPCALLCONV DPDTdll_TYPE)(double *,double *,double *,double *);
-    typedef void (RPCALLCONV DPTSATKdll_TYPE)(long *,double *,long *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV DSFLSHdll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV DSFL1dll_TYPE)(double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV DSFL2dll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV ENTHALdll_TYPE)(double *,double *,double *,double *);
-    typedef void (RPCALLCONV ENTROdll_TYPE)(double *,double *,double *,double *);
-    typedef void (RPCALLCONV ESFLSHdll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV FGCTYdll_TYPE)(double *,double *,double *,double *);
-    typedef void (RPCALLCONV FPVdll_TYPE)(double *,double *,double *,double *,double *);
-    typedef void (RPCALLCONV FUGCOFdll_TYPE)(double *,double *,double *,double*, long *,char*,long );
-    typedef void (RPCALLCONV GERG04dll_TYPE)(long *,long *,long *,char*,long );
-    typedef void (RPCALLCONV GETFIJdll_TYPE)(char*,double *,char*,char*,long ,long ,long );
-    typedef void (RPCALLCONV GETKTVdll_TYPE)(long *,long *,char*,double *,char*,char*,char*,char*,long ,long ,long ,long ,long );
-    typedef void (RPCALLCONV GIBBSdll_TYPE)(double *,double *,double *,double *,double *);
-    typedef void (RPCALLCONV HSFLSHdll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV INFOdll_TYPE)(long *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *);
-    typedef void (RPCALLCONV LIMITKdll_TYPE)(char*,long *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long ,long );
-    typedef void (RPCALLCONV LIMITSdll_TYPE)(char*,double *,double *,double *,double *,double *,long );
-    typedef void (RPCALLCONV LIMITXdll_TYPE)(char*,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long ,long );
-    typedef void (RPCALLCONV MELTPdll_TYPE)(double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV MELTTdll_TYPE)(double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV MLTH2Odll_TYPE)(double *,double *,double *);
-    typedef void (RPCALLCONV NAMEdll_TYPE)(long *,char*,char*,char*,long ,long ,long );
-    typedef void (RPCALLCONV PASSCMNdll_TYPE)(char *,long *,long *,long *,char *,long*,double *, double *, long*, char*, long, long, long);
-    typedef void (RPCALLCONV PDFL1dll_TYPE)(double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV PDFLSHdll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV PEFLSHdll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV PHFL1dll_TYPE)(double *,double *,double *,long *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV PHFLSHdll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV PHIXdll_TYPE)(long *,long *,double *,double *,double *, double *);
-    typedef void (RPCALLCONV PHI0dll_TYPE)(long *,long *,double *,double *,double *, double *);
-    typedef void (RPCALLCONV PQFLSHdll_TYPE)(double *,double *,double *,long *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV PREOSdll_TYPE)(long *);
-    typedef void (RPCALLCONV PRESSdll_TYPE)(double *,double *,double *,double *);
-    typedef void (RPCALLCONV PSFL1dll_TYPE)(double *,double *,double *,long *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV PSFLSHdll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV PUREFLDdll_TYPE)(long *);
-    typedef void (RPCALLCONV QMASSdll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV QMOLEdll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV RESIDUALdll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *);
-    typedef void (RPCALLCONV REDXdll_TYPE)(double *,double *,double *);
-    typedef void (RPCALLCONV RMIX2dll_TYPE)(double *,double *);
-    typedef void (RPCALLCONV SATDdll_TYPE)(double *,double *,long *,long *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV SATEdll_TYPE)(double *,double *,long *,long *,long *,double *,double *,double *,long *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV SATHdll_TYPE)(double *,double *,long *,long *,long *,double *,double *,double *,long *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV SATPdll_TYPE)(double *,double *,long *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV SATSdll_TYPE)(double *,double *,long *,long *,long *,double *,double *,double *,long *,double *,double *,double *,long *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV SATTdll_TYPE)(double *,double *,long *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV SATTPdll_TYPE)(double *,double *,double*,long *,long*,double *,double *,double *,double *,double *,double *, long *,char*,long );    
-    typedef void (RPCALLCONV SATSPLNdll_TYPE)(double *,long *,char*,long );
-    typedef void (RPCALLCONV SETAGAdll_TYPE)(long *,char*,long );
-    typedef void (RPCALLCONV SETKTVdll_TYPE)(long *,long *,char*,double *,char*,long *,char*,long ,long ,long );
-    typedef void (RPCALLCONV SETMIXdll_TYPE)(char*,char*,char*,long *,char*,double *,long *,char*,long ,long ,long ,long ,long );
-    typedef void (RPCALLCONV SETMODdll_TYPE)(long *,char*,char*,char*,long *,char*,long ,long ,long ,long );
-    typedef void (RPCALLCONV SETREFdll_TYPE)(char*,long *,double *,double *,double *,double *,double *,long *,char*,long ,long );
-    typedef void (RPCALLCONV SETUPdll_TYPE)(long *,char*,char*,char*,long *,char*,long ,long ,long ,long );
-    typedef void (RPCALLCONV SPLNVALdll_TYPE)(long *, long *, double *, double *, long *, char *, long);    
-    typedef void (RPCALLCONV SPECGRdll_TYPE)(double *,double *,double *,double *);
-    typedef void (RPCALLCONV SUBLPdll_TYPE)(double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV SUBLTdll_TYPE)(double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV SURFTdll_TYPE)(double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV SURTENdll_TYPE)(double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV TDFLSHdll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV TEFLSHdll_TYPE)(double *,double *,double *,long *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV THERM0dll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *);
-    typedef void (RPCALLCONV THERM2dll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *);
-    typedef void (RPCALLCONV THERM3dll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *);
-    typedef void (RPCALLCONV THERMdll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *);
-    typedef void (RPCALLCONV THFLSHdll_TYPE)(double *,double *,double *,long *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV TPFLSHdll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV TPFL2dll_TYPE)(double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV TPRHOdll_TYPE)(double *,double *,double *,long *,long *,double *,long *,char*,long );
-    typedef void (RPCALLCONV TQFLSHdll_TYPE)(double *,double *,double *,long *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV TRNPRPdll_TYPE)(double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV TSFLSHdll_TYPE)(double *,double *,double *,long *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,double *,long *,char*,long );
-    typedef void (RPCALLCONV VIRBdll_TYPE)(double *,double *,double *);
-    typedef void (RPCALLCONV VIRCdll_TYPE)(double *,double *,double *);
-    typedef void (RPCALLCONV WMOLdll_TYPE)(double *,double *);
-    typedef void (RPCALLCONV XMASSdll_TYPE)(double *,double *,double *);
-    typedef void (RPCALLCONV XMOLEdll_TYPE)(double *,double *,double *);
     
-/* Define explicit function pointers
- * Each will look something like: typedef RPVersion_TYPE * RPVersion_POINTER;
- * 
- * The ## are needed to escape the _ character in the variable names
- * 
- * ***MAGIC WARNING**!! X Macros in use
- * See http://stackoverflow.com/a/148610
- * See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
- */
-#define X(name) typedef name ## _TYPE * name ## _POINTER;
-    LIST_OF_REFPROP_FUNCTION_NAMES
-#undef X
+    #define ABFL1dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    #define ABFL2dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,long *,long *,char*,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,long *,char*,long,long 
+    #define ACTVYdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,double *,double *,long *, char *, long
+    #define AGdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF
+	// B12
+	// Blcrvdll
+    #define CCRITdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long
+	// CHEMPOT
+    #define CP0dll_ARGS DOUBLE_REF, double *, DOUBLE_REF
+	#define CRITPdll_ARGS double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    #define CSATKdll_ARGS long *,DOUBLE_REF,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+	// Cstar
+    #define CV2PKdll_ARGS long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    #define CVCPdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF
+	#define CVCPKdll_ARGS long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
+    #define DBDTdll_ARGS DOUBLE_REF,double *,DOUBLE_REF
+    #define DBFL1dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,char *,DOUBLE_REF,DOUBLE_REF,long *,char*,long, long
+    #define DBFL2dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,long *,char *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,long *,char*,long, long    
+	#define DDDPdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF
+    #define DDDTdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF
+	// DEFL1dll
+    #define DEFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    #define DHD1dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
+	#define DHFL1dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,long *,char*,long 
+	#define DHFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    #define DIELECdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF
+    // DLsatK
+	#define DOTFILLdll_ARGS double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    #define DPDD2dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF
+    #define DPDDdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF
+	#define DPDDKdll_ARGS long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
+    #define DPDTdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF
+	#define DPDTKdll_ARGS long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
+    #define DPTSATKdll_ARGS long *,DOUBLE_REF,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    // DQFL2
+	#define DSFL1dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,long *,char*,long 
+	#define DSFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    // DVDATKdll
+    #define ENTHALdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF
+    #define ENTROdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF
+	#define ESFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+	// ETAK0
+	// ETAK1
+	// ETAKB
+	// ETAKR
+	// EXCESS
+    // FGCTY2
+	#define FGCTYdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,double *
+	#define FPVdll_ARGS DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF
+	#define FUGCOFdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,double *, long *,char*,long 
+    #define GERG04dll_ARGS long *,long *,long *,char*,long 
+	#define GETFIJdll_ARGS char*,double *,char*,char*,long ,long ,long 
+	#define GETKTVdll_ARGS long *,long *,char*,double *,char*,char*,char*,char*,long ,long ,long ,long ,long 
+	// GETMOD
+    #define GIBBSdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF
+	// HEAT
+	// HEATFRM
+	// HSFL1
+    #define HSFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+	// IDCRV
+    #define INFOdll_ARGS long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
+	// JICRV
+	// JTCRV
+    #define LIMITKdll_ARGS char*,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long ,long
+	#define LIMITSdll_ARGS char*,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long 
+    #define LIMITXdll_ARGS char*,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long ,long 
+	// LIQSPNDL
+	// MASSFLUX
+	// MAXPDLL
+	// MAXTDLL
+    #define MELTPdll_ARGS DOUBLE_REF,double *,DOUBLE_REF,long *,char*,long 
+    #define MELTTdll_ARGS DOUBLE_REF,double *,DOUBLE_REF,long *,char*,long 
+    #define MLTH2Odll_ARGS DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
+    #define NAMEdll_ARGS long *,char*,char*,char*,long ,long ,long 
+    #define PASSCMNdll_ARGS char *,long *,long *,long *,char *,long*,DOUBLE_REF, double *, long*, char*, long, long, long
+	// OMEGA
+    #define PDFL1dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,long *,char*,long 
+    #define PDFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    // PEFL1
+	#define PEFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    #define PHFL1dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,long *,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    #define PHFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+	#define PHI0dll_ARGS long *,long *,DOUBLE_REF,DOUBLE_REF,double *, DOUBLE_REF
+    #define PHIXdll_ARGS long *,long *,DOUBLE_REF,DOUBLE_REF,double *, DOUBLE_REF
+    #define PQFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    #define PREOSdll_ARGS long *
+    #define PRESSdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF
+	// PSATK
+    #define PSFL1dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,long *,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    #define PSFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    #define PUREFLDdll_ARGS long *
+	#define QMASSdll_ARGS DOUBLE_REF,double *,double *,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    #define QMOLEdll_ARGS DOUBLE_REF,double *,double *,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+	// RDXHMX
+	#define REDXdll_ARGS DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
+    #define RESIDUALdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
+	// RIEM
+    #define RMIX2dll_ARGS double *,DOUBLE_REF
+	#define RPVersion_ARGS char*, long
+    #define SATDdll_ARGS DOUBLE_REF,double *,long *,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,long *,char*,long 
+    #define SATEdll_ARGS DOUBLE_REF,double *,long *,long *,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+	// SATGUESS
+	// SATGV
+    #define SATHdll_ARGS DOUBLE_REF,double *,long *,long *,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    #define SATPdll_ARGS DOUBLE_REF,double *,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,long *,char*,long 
+	// SATPEST
+    #define SATSdll_ARGS DOUBLE_REF,double *,long *,long *,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    #define SATSPLNdll_ARGS double *,long *,char*,long 
+	#define SATTdll_ARGS DOUBLE_REF,double *,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,long *,char*,long 
+    // SATTEST
+	#define SATTPdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,long *,long*,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF, long *,char*,long     
+    #define SETAGAdll_ARGS long *,char*,long 
+    #define SETKTVdll_ARGS long *,long *,char*,double *,char*,long *,char*,long ,long ,long 
+    #define SETMIXdll_ARGS char*,char*,char*,long *,char*,double *,long *,char*,long ,long ,long ,long ,long 
+	#define SETMODdll_ARGS long *,char*,char*,char*,long *,char*,long ,long ,long ,long 
+	#define SETPATHdll_ARGS const char*
+    #define SETREFdll_ARGS char*,long *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long ,long 
+    #define SETUPdll_ARGS long *,char*,char*,char*,long *,char*,long ,long ,long ,long 
+	// SPLNROOT
+	#define SPLNVALdll_ARGS long *, long *, DOUBLE_REF, DOUBLE_REF, long *, char *, long    
+    #define SUBLPdll_ARGS DOUBLE_REF,double *,DOUBLE_REF,long *,char*,long 
+    #define SUBLTdll_ARGS DOUBLE_REF,double *,DOUBLE_REF,long *,char*,long 
+    #define SURFTdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,long *,char*,long 
+    #define SURTENdll_ARGS DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,long *,char*,long 
+	// TCXK0
+	// TCXKB
+	// TCKKC
+    #define TDFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    //TEFL1
+	#define TEFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    #define THERM0dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
+    #define THERM2dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
+    #define THERM3dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
+    #define THERMdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
+	// THFL1
+    #define THFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    #define TPFL2dll_ARGS DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+	#define TPFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    #define TPRHOdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,long *,long *,DOUBLE_REF,long *,char*,long 
+	// TPPROPR
+    #define TQFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+    #define TRNPRPdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,long *,char*,long
+	// TSATD
+	// TSFL1
+    #define TSFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,long *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,long *,char*,long 
+	// UNSETAGA
+	// VAPSPNDL
+	// VIRBA
+    #define VIRBdll_ARGS DOUBLE_REF,double *,DOUBLE_REF
+    // VIRCA
+	#define VIRCdll_ARGS DOUBLE_REF,double *,DOUBLE_REF
+    #define WMOLdll_ARGS double *,DOUBLE_REF
+    #define XMASSdll_ARGS double *,double *,DOUBLE_REF
+    #define XMOLEdll_ARGS double *,double *,DOUBLE_REF
+    
+	/* Define explicit function pointers
+	 * Each will look something like: typedef void (RPCALLCONV ACTVYdll_TYPE)(ACTVYdll_ARGS);
+	 * 
+	 * The ## are needed to escape the _ character in the variable names
+	 * 
+	 * ***MAGIC WARNING**!! X Macros in use
+	 * See http://stackoverflow.com/a/148610
+	 * See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
+	 */
+	#define X(name)  typedef void (RPCALLCONV name ## _TYPE)(name ## _ARGS);
+		LIST_OF_REFPROP_FUNCTION_NAMES
+	#undef X
+
+	/* Define explicit function pointers
+	 * Each will look something like: typedef RPVersion_TYPE * RPVersion_POINTER;
+	 * 
+	 * The ## are needed to escape the _ character in the variable names
+	 * 
+	 * ***MAGIC WARNING**!! X Macros in use
+	 * See http://stackoverflow.com/a/148610
+	 * See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
+	 */
+	#define X(name) typedef name ## _TYPE * name ## _POINTER;
+		LIST_OF_REFPROP_FUNCTION_NAMES
+	#undef X
 
 #ifdef __cplusplus
 } // extern "C"
