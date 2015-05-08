@@ -121,14 +121,14 @@
     X(XMASSdll) \
     X(XMOLEdll)
     
-// Some constants for REFPROP... defined by macros for ease of use
-#define refpropcharlength 255
-#define filepathlength 255
-#define lengthofreference 3
-#define errormessagelength 255
-#define ncmax 20
-#define numparams 72
-#define maxcoefs 50
+// Some constants for REFPROP...
+const static long refpropcharlength = 255;
+const static long filepathlength = 255;
+const static long lengthofreference = 3;
+const static long errormessagelength = 255;
+const static long ncmax = 20;
+const static long numparams = 72;
+const static long maxcoefs = 50;
 
 // Get the platform identifiers, some overlap with "PlatformDetermination.h" from CoolProp's main repo 
 // See also http://stackoverflow.com/questions/5919996/how-to-detect-reliably-mac-os-x-ios-linux-windows-in-c-preprocessor
