@@ -416,7 +416,7 @@ extern "C" {
      LIST_OF_REFPROP_FUNCTION_NAMES
     #undef X
 	
-	inline std::string lower(std::string str)
+	inline std::string RPlower(std::string str)
     {
         std::transform(str.begin(), str.end(), str.begin(), ::tolower);
         return str;
@@ -429,9 +429,9 @@ extern "C" {
             case NO_NAME_MANGLING:
                 function_name = name; break;
             case LOWERCASE_NAME_MANGLING:
-                function_name = lower(name); break;
+                function_name = RPlower(name); break;
             case LOWERCASE_AND_UNDERSCORE_NAME_MANGLING:
-                function_name = lower(name) + "_"; break;
+                function_name = RPlower(name) + "_"; break;
         }
         #if defined(__RPISWINDOWS__)
             return (void *) GetProcAddress(RefpropdllInstance, function_name.c_str());
