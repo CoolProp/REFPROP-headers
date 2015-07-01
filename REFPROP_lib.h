@@ -49,6 +49,7 @@
     X(ENTROdll) \
     X(ESFLSHdll) \
     X(FGCTYdll) \
+    X(FGCTY2dll) \
     X(FUGCOFdll) \
     X(FPVdll) \
     X(GERG04dll) \
@@ -228,7 +229,7 @@ extern "C" {
     // ETAKB
     // ETAKR
     // EXCESS
-    // FGCTY2
+    #define FGCTY2dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,double *
     #define FGCTYdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,double *
     #define FPVdll_ARGS DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF
     #define FUGCOFdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,double *, LONG_REF,char*,long 
