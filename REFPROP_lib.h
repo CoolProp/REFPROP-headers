@@ -65,7 +65,7 @@
     X(MELTTdll) \
     X(MLTH2Odll) \
     X(NAMEdll) \
-    X(PASSCMNdll) \
+    X(PASSCMN) \
     X(PDFL1dll) \
     X(PDFLSHdll) \
     X(PEFLSHdll) \
@@ -86,6 +86,7 @@
     X(RMIX2dll) \
     X(SATDdll) \
     X(SATEdll) \
+	X(SATGVdll) \
     X(SATHdll) \
     X(SATPdll) \
     X(SATSdll) \
@@ -99,6 +100,7 @@
     X(SETREFdll) \
     X(SETUPdll) \
     X(SPLNVALdll) \
+	X(SPLNROOTdll) \
     X(SUBLPdll) \
     X(SUBLTdll) \
     X(SURFTdll) \
@@ -257,7 +259,7 @@ extern "C" {
     #define MELTTdll_ARGS DOUBLE_REF,double *,DOUBLE_REF,LONG_REF,char*,long 
     #define MLTH2Odll_ARGS DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
     #define NAMEdll_ARGS LONG_REF,char*,char*,char*,long ,long ,long 
-    #define PASSCMNdll_ARGS char *,LONG_REF,LONG_REF,LONG_REF,char *,long*,DOUBLE_REF, double *, long*, char*, long, long, long
+    #define PASSCMN_ARGS char *,LONG_REF,LONG_REF,LONG_REF,char *,LONG_REF,DOUBLE_REF, double *, LONG_REF, char*, long, long, long
     // OMEGA
     #define PDFL1dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,LONG_REF,char*,long 
     #define PDFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
@@ -285,7 +287,7 @@ extern "C" {
     #define SATDdll_ARGS DOUBLE_REF,double *,LONG_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,LONG_REF,char*,long 
     #define SATEdll_ARGS DOUBLE_REF,double *,LONG_REF,LONG_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
     // SATGUESS
-    // SATGV
+	#define SATGVdll_ARGS DOUBLE_REF, DOUBLE_REF, double *, DOUBLE_REF, DOUBLE_REF, LONG_REF, LONG_REF, LONG_REF, DOUBLE_REF, DOUBLE_REF, double *, double *, LONG_REF, char*, long
     #define SATHdll_ARGS DOUBLE_REF,double *,LONG_REF,LONG_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
     #define SATPdll_ARGS DOUBLE_REF,double *,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,LONG_REF,char*,long 
     // SATPEST
@@ -293,7 +295,7 @@ extern "C" {
     #define SATSPLNdll_ARGS double *,LONG_REF,char*,long 
     #define SATTdll_ARGS DOUBLE_REF,double *,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,LONG_REF,char*,long 
     // SATTEST
-    #define SATTPdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,LONG_REF,long*,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF, LONG_REF,char*,long     
+    #define SATTPdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,LONG_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF, LONG_REF,char*,long     
     #define SETAGAdll_ARGS LONG_REF,char*,long 
     #define SETKTVdll_ARGS LONG_REF,LONG_REF,char*,double *,char*,LONG_REF,char*,long ,long ,long 
     #define SETMIXdll_ARGS char*,char*,char*,LONG_REF,char*,double *,LONG_REF,char*,long ,long ,long ,long ,long 
@@ -301,7 +303,8 @@ extern "C" {
     #define SETPATHdll_ARGS const char*
     #define SETREFdll_ARGS char*,LONG_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long ,long 
     #define SETUPdll_ARGS LONG_REF,char*,char*,char*,LONG_REF,char*,long ,long ,long ,long 
-    // SPLNROOT
+    
+	#define SPLNROOTdll_ARGS LONG_REF, LONG_REF, DOUBLE_REF, DOUBLE_REF, LONG_REF, char *, long
     #define SPLNVALdll_ARGS LONG_REF, LONG_REF, DOUBLE_REF, DOUBLE_REF, LONG_REF, char *, long    
     #define SUBLPdll_ARGS DOUBLE_REF,double *,DOUBLE_REF,LONG_REF,char*,long 
     #define SUBLTdll_ARGS DOUBLE_REF,double *,DOUBLE_REF,LONG_REF,char*,long 
