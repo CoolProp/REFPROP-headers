@@ -174,11 +174,6 @@ const static long maxcoefs = 50;
     #define LONG_REF long &
 #endif
 
-// I'll try to follow this example from:
-// http://www.gershnik.com/tips/cpp.asp
-// function type: typedef void [compiler stuff]  func_t(int, float);
-// function declaration: func_t func;
-// pointer type: typedef func_t * func_ptr;
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -325,7 +320,7 @@ extern "C" {
     #define TPFL2dll_ARGS DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
     #define TPFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
     #define TPRHOdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,LONG_REF,LONG_REF,DOUBLE_REF,LONG_REF,char*,long 
-    // TPPROPR
+    // TPRHOPR
     #define TQFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
     #define TRNPRPdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long
     // TSATD
@@ -340,49 +335,48 @@ extern "C" {
     #define WMOLdll_ARGS double *,DOUBLE_REF
     #define XMASSdll_ARGS double *,double *,DOUBLE_REF
     #define XMOLEdll_ARGS double *,double *,DOUBLE_REF
+
+    #if !defined(REFPROP_PROTOTYPES)
     
-    ///* Define explicit function pointers
-    // * Each will look something like: typedef void (RPCALLCONV ACTVYdll_TYPE)(ACTVYdll_ARGS);
-    // * 
-    // * The ## are needed to escape the _ character in the variable names
-    // * 
-    // * ***MAGIC WARNING**!! X Macros in use
-    // * See http://stackoverflow.com/a/148610
-    // * See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
-    // */
-    #define X(name)  typedef void (RPCALLCONV name ## _TYPE)(name ## _ARGS);
-        LIST_OF_REFPROP_FUNCTION_NAMES
-    #undef X
-
-    // Define explicit function pointers
-    // Each will look something like: typedef RPVersion_TYPE * RPVersion_POINTER;
-    // 
-    // The ## are needed to escape the _ character in the variable names
-    // 
-    // ***MAGIC WARNING**!! X Macros in use
-    // See http://stackoverflow.com/a/148610
-    // See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
-    //
-    #define X(name) typedef name ## _TYPE * name ## _POINTER;
-        LIST_OF_REFPROP_FUNCTION_NAMES
-    #undef X
-
-    /* Define functions as pointers and initialise them to NULL
-    * Declare the functions for direct access
-    *
-    * Example: SETPATHdll_POINTER SETPATHdll;
-    *
-    * ***MAGIC WARNING**!! X Macros in use
-    * See http://stackoverflow.com/a/148610
-    * See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
-    */
-    #ifdef REFPROP_IMPLEMENTATION
+        // ***MAGIC WARNING**!! X Macros in use
+        // See http://stackoverflow.com/a/148610
+        // See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
+        
+        // Further information here:
+        // http://www.gershnik.com/tips/cpp.asp
+    
+        // Define type names for each function
+        // Each will look something like: typedef void (RPCALLCONV ACTVYdll_TYPE)(ACTVYdll_ARGS);
+        // 
+        // The ## are needed to escape the _ character in the variable names
+        // 
+        #define X(name) typedef void (RPCALLCONV name ## _TYPE)(name ## _ARGS);
+            LIST_OF_REFPROP_FUNCTION_NAMES
+        #undef X
+        
+        // Define explicit function pointers for each function
+        // Each will look something like: typedef RPVersion_TYPE * RPVersion_POINTER;
+        // 
+        // The ## are needed to escape the _ character in the variable names
+        // 
+        #define X(name) typedef name ## _TYPE * name ## _POINTER;
+            LIST_OF_REFPROP_FUNCTION_NAMES
+        #undef X
+        
+        // Define functions as pointers
+        // Each will look something like: SETPATHdll_POINTER SETPATHdll;
+        //
         #define X(name)  name ## _POINTER name;
-         LIST_OF_REFPROP_FUNCTION_NAMES
+            LIST_OF_REFPROP_FUNCTION_NAMES
         #undef X
     #else
-        #define X(name)  extern name ## _POINTER name;
-         LIST_OF_REFPROP_FUNCTION_NAMES
+        // Otherwise this header becomes just a set of prototypes for the functions
+        // defining the input parameters
+        //
+        // The ## are needed to escape the _ character in the macro name in the intermediate expansion
+        // 
+        #define X(name) extern void name(name ## _ARGS);
+            LIST_OF_REFPROP_FUNCTION_NAMES
         #undef X
     #endif
 
