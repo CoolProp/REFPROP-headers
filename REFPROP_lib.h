@@ -295,7 +295,7 @@ extern "C" {
     #define SETKTVdll_ARGS LONG_REF,LONG_REF,char*,double *,char*,LONG_REF,char*,long ,long ,long 
     #define SETMIXdll_ARGS char*,char*,char*,LONG_REF,char*,double *,LONG_REF,char*,long ,long ,long ,long ,long 
     #define SETMODdll_ARGS LONG_REF,char*,char*,char*,LONG_REF,char*,long ,long ,long ,long 
-    #define SETPATHdll_ARGS const char*
+    #define SETPATHdll_ARGS char*, long
     #define SETREFdll_ARGS char*,LONG_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long ,long 
     #define SETUPdll_ARGS LONG_REF,char*,char*,char*,LONG_REF,char*,long ,long ,long ,long 
     
