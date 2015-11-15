@@ -410,9 +410,13 @@ extern "C" {
         #include <dlfcn.h>
         static void *RefpropdllInstance=NULL;
     #elif defined(__RPISWINDOWS__)
-        #define NOMINMAX
-        #include <windows.h>
-        #undef NOMINMAX
+        #ifndef NOMINMAX
+            #define NOMINMAX
+            #include <windows.h>
+            #undef NOMINMAX
+        #else 
+            #include <windows.h>
+        #endif
         static HINSTANCE RefpropdllInstance=NULL;
     #else
         #pragma error
@@ -533,8 +537,10 @@ extern "C" {
             {
                 #if defined(__RPISWINDOWS__)
                     err = "Could not load refprop.dll, make sure it is in your system search path. In case you run 64bit and you have a REFPROP license, try installing the 64bit DLL from NIST.";
-                #elif defined(__RPISLINUX__) || defined (__RPISLINUX__)
+                #elif defined(__RPISLINUX__)
                     err = "Could not load librefprop.so, make sure it is in your system search path.";
+                #elif defined(__RPISAPPLE__)
+                    err = "Could not load librefprop.dylib, make sure it is in your system search path.";
                 #else
                     err = "Something is wrong with the platform definition, you should not end up here.";
                 #endif
