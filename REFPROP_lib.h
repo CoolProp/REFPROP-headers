@@ -86,7 +86,7 @@
     X(RMIX2dll) \
     X(SATDdll) \
     X(SATEdll) \
-	X(SATGVdll) \
+    X(SATGVdll) \
     X(SATHdll) \
     X(SATPdll) \
     X(SATSdll) \
@@ -100,7 +100,7 @@
     X(SETREFdll) \
     X(SETUPdll) \
     X(SPLNVALdll) \
-	X(SPLNROOTdll) \
+    X(SPLNROOTdll) \
     X(SUBLPdll) \
     X(SUBLTdll) \
     X(SURFTdll) \
@@ -282,7 +282,7 @@ extern "C" {
     #define SATDdll_ARGS DOUBLE_REF,double *,LONG_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,LONG_REF,char*,long 
     #define SATEdll_ARGS DOUBLE_REF,double *,LONG_REF,LONG_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
     // SATGUESS
-	#define SATGVdll_ARGS DOUBLE_REF, DOUBLE_REF, double *, DOUBLE_REF, DOUBLE_REF, LONG_REF, LONG_REF, LONG_REF, DOUBLE_REF, DOUBLE_REF, double *, double *, LONG_REF, char*, long
+    #define SATGVdll_ARGS DOUBLE_REF, DOUBLE_REF, double *, DOUBLE_REF, DOUBLE_REF, LONG_REF, LONG_REF, LONG_REF, DOUBLE_REF, DOUBLE_REF, double *, double *, LONG_REF, char*, long
     #define SATHdll_ARGS DOUBLE_REF,double *,LONG_REF,LONG_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
     #define SATPdll_ARGS DOUBLE_REF,double *,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,LONG_REF,char*,long 
     // SATPEST
@@ -299,7 +299,7 @@ extern "C" {
     #define SETREFdll_ARGS char*,LONG_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long ,long 
     #define SETUPdll_ARGS LONG_REF,char*,char*,char*,LONG_REF,char*,long ,long ,long ,long 
     
-	#define SPLNROOTdll_ARGS LONG_REF, LONG_REF, DOUBLE_REF, DOUBLE_REF, LONG_REF, char *, long
+    #define SPLNROOTdll_ARGS LONG_REF, LONG_REF, DOUBLE_REF, DOUBLE_REF, LONG_REF, char *, long
     #define SPLNVALdll_ARGS LONG_REF, LONG_REF, DOUBLE_REF, DOUBLE_REF, LONG_REF, char *, long    
     #define SUBLPdll_ARGS DOUBLE_REF,double *,DOUBLE_REF,LONG_REF,char*,long 
     #define SUBLTdll_ARGS DOUBLE_REF,double *,DOUBLE_REF,LONG_REF,char*,long 
@@ -433,7 +433,8 @@ extern "C" {
     void *getFunctionPointer(const char *name, DLLNameManglingStyle mangling_style = NO_NAME_MANGLING)
     {
         std::string function_name;
-        switch(mangling_style){
+        switch(mangling_style)
+        {
             case NO_NAME_MANGLING:
                 function_name = name; break;
             case LOWERCASE_NAME_MANGLING:
@@ -459,7 +460,7 @@ extern "C" {
     {
         if (RefpropdllInstance==NULL)
         { 
-            err = "REFPROP is not loaded, make sure you call this function after loading the library using load_REFPROP";
+            err = "REFPROP is not loaded, make sure you call this function after loading the library using load_REFPROP.";
             return false;
         }
         /* First determine the type of name mangling in use.
@@ -467,25 +468,28 @@ extern "C" {
          * B) RPVersion -> rpversion
          * C) RPVersion -> rpversion_
          */
-         DLLNameManglingStyle mangling_style = NO_NAME_MANGLING; // defaults to no mangling
+        DLLNameManglingStyle mangling_style = NO_NAME_MANGLING; // defaults to no mangling
 
-         SETUPdll = (SETUPdll_POINTER) getFunctionPointer("SETUPdll");
-         if (SETUPdll == NULL){ // some mangling in use
-             SETUPdll = (SETUPdll_POINTER) getFunctionPointer("setupdll");
-             if (SETUPdll != NULL){
+        SETUPdll = (SETUPdll_POINTER) getFunctionPointer("SETUPdll"); // try NO_NAME_MANGLING
+        if (SETUPdll == NULL) 
+        { 
+            SETUPdll = (SETUPdll_POINTER) getFunctionPointer("setupdll"); // try LOWERCASE_NAME_MANGLING
+            if (SETUPdll == NULL) 
+            {
+                SETUPdll = (SETUPdll_POINTER) getFunctionPointer("setupdll_"); // try LOWERCASE_AND_UNDERSCORE_NAME_MANGLING
+                if (SETUPdll == NULL) 
+                {
+                    err = "Could not load the symbol SETUPdll or any of its mangled forms; REFPROP shared library broken.";
+                    return false;
+                } else {
+                    mangling_style = LOWERCASE_AND_UNDERSCORE_NAME_MANGLING;
+                }
+            } else {
                 mangling_style = LOWERCASE_NAME_MANGLING;
-             }
-             else{
-                 SETUPdll = (SETUPdll_POINTER) getFunctionPointer("setupdll_");
-                 if (SETUPdll != NULL){
-                     mangling_style = LOWERCASE_AND_UNDERSCORE_NAME_MANGLING;
-                 }
-                 else{
-                     err = "Could not load the symbol SETUPdll or any of its mangled forms; REFPROP shared library broken";
-                     return false;
-                 }
-             }
-         }
+            }
+        } else {
+            mangling_style = NO_NAME_MANGLING;
+        } 
 
         /* Set the pointers, platform independent
          *
@@ -506,7 +510,6 @@ extern "C" {
         // If REFPROP is not loaded
         if (RefpropdllInstance == NULL)
         {
-
             // Load it
             #if defined(__RPISWINDOWS__)
                 /* We need this logic on windows because if you use the bitness
@@ -519,7 +522,7 @@ extern "C" {
                 TCHAR refpropdllstring[100] = TEXT("refprp64.dll");
                 RefpropdllInstance = LoadLibrary(refpropdllstring);
 
-                if (RefpropdllInstance==NULL){
+                if (RefpropdllInstance == NULL){
                     // That didn't work, let's try the 32-bit version
                     // 32-bit code here.
                     TCHAR refpropdllstring32[100] = TEXT("refprop.dll");
@@ -533,7 +536,7 @@ extern "C" {
                 RefpropdllInstance = NULL;
             #endif
 
-            if (RefpropdllInstance==NULL)
+            if (RefpropdllInstance == NULL)
             {
                 #if defined(__RPISWINDOWS__)
                     err = "Could not load refprop.dll, make sure it is in your system search path. In case you run 64bit and you have a REFPROP license, try installing the 64bit DLL from NIST.";
@@ -549,7 +552,7 @@ extern "C" {
             std::string err;
             if (setFunctionPointers(err) != true)
             {
-                err = "There was an error setting the REFPROP function pointers, check types and names in header file";
+                err = "There was an error setting the REFPROP function pointers, check types and names in header file.";
                 return false;
             }
             char rpv[1000];
@@ -561,6 +564,5 @@ extern "C" {
     }
 
 #endif // REFPROP_IMPLEMENTATION
-
 
 #endif // REFPROP_LIB_H

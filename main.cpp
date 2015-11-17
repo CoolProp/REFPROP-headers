@@ -5,7 +5,7 @@
 
 int main()
 {
-    // Load the DLL
+    // Load the shared library
 	std::string err;
     bool loaded_REFPROP = load_REFPROP(err);
 	long ierr = 0, nc = 1;
