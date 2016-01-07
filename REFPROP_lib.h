@@ -65,7 +65,7 @@
     X(MELTTdll) \
     X(MLTH2Odll) \
     X(NAMEdll) \
-    X(PASSCMNdll) \
+    X(PASSCMN) \
     X(PDFL1dll) \
     X(PDFLSHdll) \
     X(PEFLSHdll) \
@@ -86,6 +86,7 @@
     X(RMIX2dll) \
     X(SATDdll) \
     X(SATEdll) \
+    X(SATGVdll) \
     X(SATHdll) \
     X(SATPdll) \
     X(SATSdll) \
@@ -99,6 +100,7 @@
     X(SETREFdll) \
     X(SETUPdll) \
     X(SPLNVALdll) \
+    X(SPLNROOTdll) \
     X(SUBLPdll) \
     X(SUBLTdll) \
     X(SURFTdll) \
@@ -172,11 +174,6 @@ const static long maxcoefs = 50;
     #define LONG_REF long &
 #endif
 
-// I'll try to follow this example from:
-// http://www.gershnik.com/tips/cpp.asp
-// function type: typedef void [compiler stuff]  func_t(int, float);
-// function declaration: func_t func;
-// pointer type: typedef func_t * func_ptr;
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -257,7 +254,7 @@ extern "C" {
     #define MELTTdll_ARGS DOUBLE_REF,double *,DOUBLE_REF,LONG_REF,char*,long 
     #define MLTH2Odll_ARGS DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
     #define NAMEdll_ARGS LONG_REF,char*,char*,char*,long ,long ,long 
-    #define PASSCMNdll_ARGS char *,LONG_REF,LONG_REF,LONG_REF,char *,long*,DOUBLE_REF, double *, long*, char*, long, long, long
+    #define PASSCMN_ARGS char *,LONG_REF,LONG_REF,LONG_REF,char *,LONG_REF,DOUBLE_REF, double *, LONG_REF, char*, long, long, long
     // OMEGA
     #define PDFL1dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,LONG_REF,char*,long 
     #define PDFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
@@ -285,7 +282,7 @@ extern "C" {
     #define SATDdll_ARGS DOUBLE_REF,double *,LONG_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,LONG_REF,char*,long 
     #define SATEdll_ARGS DOUBLE_REF,double *,LONG_REF,LONG_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
     // SATGUESS
-    // SATGV
+    #define SATGVdll_ARGS DOUBLE_REF, DOUBLE_REF, double *, DOUBLE_REF, DOUBLE_REF, LONG_REF, LONG_REF, LONG_REF, DOUBLE_REF, DOUBLE_REF, double *, double *, LONG_REF, char*, long
     #define SATHdll_ARGS DOUBLE_REF,double *,LONG_REF,LONG_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
     #define SATPdll_ARGS DOUBLE_REF,double *,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,LONG_REF,char*,long 
     // SATPEST
@@ -293,15 +290,16 @@ extern "C" {
     #define SATSPLNdll_ARGS double *,LONG_REF,char*,long 
     #define SATTdll_ARGS DOUBLE_REF,double *,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,LONG_REF,char*,long 
     // SATTEST
-    #define SATTPdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,LONG_REF,long*,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF, LONG_REF,char*,long     
+    #define SATTPdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,LONG_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF, LONG_REF,char*,long     
     #define SETAGAdll_ARGS LONG_REF,char*,long 
     #define SETKTVdll_ARGS LONG_REF,LONG_REF,char*,double *,char*,LONG_REF,char*,long ,long ,long 
     #define SETMIXdll_ARGS char*,char*,char*,LONG_REF,char*,double *,LONG_REF,char*,long ,long ,long ,long ,long 
     #define SETMODdll_ARGS LONG_REF,char*,char*,char*,LONG_REF,char*,long ,long ,long ,long 
-    #define SETPATHdll_ARGS const char*
+    #define SETPATHdll_ARGS char*, long
     #define SETREFdll_ARGS char*,LONG_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long ,long 
     #define SETUPdll_ARGS LONG_REF,char*,char*,char*,LONG_REF,char*,long ,long ,long ,long 
-    // SPLNROOT
+    
+    #define SPLNROOTdll_ARGS LONG_REF, LONG_REF, DOUBLE_REF, DOUBLE_REF, LONG_REF, char *, long
     #define SPLNVALdll_ARGS LONG_REF, LONG_REF, DOUBLE_REF, DOUBLE_REF, LONG_REF, char *, long    
     #define SUBLPdll_ARGS DOUBLE_REF,double *,DOUBLE_REF,LONG_REF,char*,long 
     #define SUBLTdll_ARGS DOUBLE_REF,double *,DOUBLE_REF,LONG_REF,char*,long 
@@ -322,7 +320,7 @@ extern "C" {
     #define TPFL2dll_ARGS DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
     #define TPFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
     #define TPRHOdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,LONG_REF,LONG_REF,DOUBLE_REF,LONG_REF,char*,long 
-    // TPPROPR
+    // TPRHOPR
     #define TQFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
     #define TRNPRPdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long
     // TSATD
@@ -337,49 +335,48 @@ extern "C" {
     #define WMOLdll_ARGS double *,DOUBLE_REF
     #define XMASSdll_ARGS double *,double *,DOUBLE_REF
     #define XMOLEdll_ARGS double *,double *,DOUBLE_REF
+
+    #if !defined(REFPROP_PROTOTYPES)
     
-    ///* Define explicit function pointers
-    // * Each will look something like: typedef void (RPCALLCONV ACTVYdll_TYPE)(ACTVYdll_ARGS);
-    // * 
-    // * The ## are needed to escape the _ character in the variable names
-    // * 
-    // * ***MAGIC WARNING**!! X Macros in use
-    // * See http://stackoverflow.com/a/148610
-    // * See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
-    // */
-    #define X(name)  typedef void (RPCALLCONV name ## _TYPE)(name ## _ARGS);
-        LIST_OF_REFPROP_FUNCTION_NAMES
-    #undef X
-
-    // Define explicit function pointers
-    // Each will look something like: typedef RPVersion_TYPE * RPVersion_POINTER;
-    // 
-    // The ## are needed to escape the _ character in the variable names
-    // 
-    // ***MAGIC WARNING**!! X Macros in use
-    // See http://stackoverflow.com/a/148610
-    // See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
-    //
-    #define X(name) typedef name ## _TYPE * name ## _POINTER;
-        LIST_OF_REFPROP_FUNCTION_NAMES
-    #undef X
-
-    /* Define functions as pointers and initialise them to NULL
-    * Declare the functions for direct access
-    *
-    * Example: SETPATHdll_POINTER SETPATHdll;
-    *
-    * ***MAGIC WARNING**!! X Macros in use
-    * See http://stackoverflow.com/a/148610
-    * See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
-    */
-    #ifdef REFPROP_IMPLEMENTATION
+        // ***MAGIC WARNING**!! X Macros in use
+        // See http://stackoverflow.com/a/148610
+        // See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
+        
+        // Further information here:
+        // http://www.gershnik.com/tips/cpp.asp
+    
+        // Define type names for each function
+        // Each will look something like: typedef void (RPCALLCONV ACTVYdll_TYPE)(ACTVYdll_ARGS);
+        // 
+        // The ## are needed to escape the _ character in the variable names
+        // 
+        #define X(name) typedef void (RPCALLCONV name ## _TYPE)(name ## _ARGS);
+            LIST_OF_REFPROP_FUNCTION_NAMES
+        #undef X
+        
+        // Define explicit function pointers for each function
+        // Each will look something like: typedef RPVersion_TYPE * RPVersion_POINTER;
+        // 
+        // The ## are needed to escape the _ character in the variable names
+        // 
+        #define X(name) typedef name ## _TYPE * name ## _POINTER;
+            LIST_OF_REFPROP_FUNCTION_NAMES
+        #undef X
+        
+        // Define functions as pointers
+        // Each will look something like: SETPATHdll_POINTER SETPATHdll;
+        //
         #define X(name)  name ## _POINTER name;
-         LIST_OF_REFPROP_FUNCTION_NAMES
+            LIST_OF_REFPROP_FUNCTION_NAMES
         #undef X
     #else
-        #define X(name)  extern name ## _POINTER name;
-         LIST_OF_REFPROP_FUNCTION_NAMES
+        // Otherwise this header becomes just a set of prototypes for the functions
+        // defining the input parameters
+        //
+        // The ## are needed to escape the _ character in the macro name in the intermediate expansion
+        // 
+        #define X(name) extern void name(name ## _ARGS);
+            LIST_OF_REFPROP_FUNCTION_NAMES
         #undef X
     #endif
 
@@ -413,9 +410,13 @@ extern "C" {
         #include <dlfcn.h>
         static void *RefpropdllInstance=NULL;
     #elif defined(__RPISWINDOWS__)
-        #define NOMINMAX
-        #include <windows.h>
-        #undef NOMINMAX
+        #ifndef NOMINMAX
+            #define NOMINMAX
+            #include <windows.h>
+            #undef NOMINMAX
+        #else 
+            #include <windows.h>
+        #endif
         static HINSTANCE RefpropdllInstance=NULL;
     #else
         #pragma error
@@ -432,7 +433,8 @@ extern "C" {
     void *getFunctionPointer(const char *name, DLLNameManglingStyle mangling_style = NO_NAME_MANGLING)
     {
         std::string function_name;
-        switch(mangling_style){
+        switch(mangling_style)
+        {
             case NO_NAME_MANGLING:
                 function_name = name; break;
             case LOWERCASE_NAME_MANGLING:
@@ -458,7 +460,7 @@ extern "C" {
     {
         if (RefpropdllInstance==NULL)
         { 
-            err = "REFPROP is not loaded, make sure you call this function after loading the library using load_REFPROP";
+            err = "REFPROP is not loaded, make sure you call this function after loading the library using load_REFPROP.";
             return false;
         }
         /* First determine the type of name mangling in use.
@@ -466,25 +468,28 @@ extern "C" {
          * B) RPVersion -> rpversion
          * C) RPVersion -> rpversion_
          */
-         DLLNameManglingStyle mangling_style = NO_NAME_MANGLING; // defaults to no mangling
+        DLLNameManglingStyle mangling_style = NO_NAME_MANGLING; // defaults to no mangling
 
-         SETUPdll = (SETUPdll_POINTER) getFunctionPointer("SETUPdll");
-         if (SETUPdll == NULL){ // some mangling in use
-             SETUPdll = (SETUPdll_POINTER) getFunctionPointer("setupdll");
-             if (SETUPdll != NULL){
+        SETUPdll = (SETUPdll_POINTER) getFunctionPointer("SETUPdll"); // try NO_NAME_MANGLING
+        if (SETUPdll == NULL) 
+        { 
+            SETUPdll = (SETUPdll_POINTER) getFunctionPointer("setupdll"); // try LOWERCASE_NAME_MANGLING
+            if (SETUPdll == NULL) 
+            {
+                SETUPdll = (SETUPdll_POINTER) getFunctionPointer("setupdll_"); // try LOWERCASE_AND_UNDERSCORE_NAME_MANGLING
+                if (SETUPdll == NULL) 
+                {
+                    err = "Could not load the symbol SETUPdll or any of its mangled forms; REFPROP shared library broken.";
+                    return false;
+                } else {
+                    mangling_style = LOWERCASE_AND_UNDERSCORE_NAME_MANGLING;
+                }
+            } else {
                 mangling_style = LOWERCASE_NAME_MANGLING;
-             }
-             else{
-                 SETUPdll = (SETUPdll_POINTER) getFunctionPointer("setupdll_");
-                 if (SETUPdll != NULL){
-                     mangling_style = LOWERCASE_AND_UNDERSCORE_NAME_MANGLING;
-                 }
-                 else{
-                     err = "Could not load the symbol SETUPdll or any of its mangled forms; REFPROP shared library broken";
-                     return false;
-                 }
-             }
-         }
+            }
+        } else {
+            mangling_style = NO_NAME_MANGLING;
+        } 
 
         /* Set the pointers, platform independent
          *
@@ -505,7 +510,6 @@ extern "C" {
         // If REFPROP is not loaded
         if (RefpropdllInstance == NULL)
         {
-
             // Load it
             #if defined(__RPISWINDOWS__)
             /* We need this logic on windows because if you use the bitness
@@ -543,12 +547,14 @@ extern "C" {
                 RefpropdllInstance = NULL;
             #endif
 
-            if (RefpropdllInstance==NULL)
+            if (RefpropdllInstance == NULL)
             {
                 #if defined(__RPISWINDOWS__)
                     err = "Could not load refprop.dll, make sure it is in your system search path. In case you run 64bit and you have a REFPROP license, try installing the 64bit DLL from NIST.";
-                #elif defined(__RPISLINUX__) || defined (__RPISLINUX__)
+                #elif defined(__RPISLINUX__)
                     err = "Could not load librefprop.so, make sure it is in your system search path.";
+                #elif defined(__RPISAPPLE__)
+                    err = "Could not load librefprop.dylib, make sure it is in your system search path.";
                 #else
                     err = "Something is wrong with the platform definition, you should not end up here.";
                 #endif
@@ -557,7 +563,7 @@ extern "C" {
             std::string err;
             if (setFunctionPointers(err) != true)
             {
-                err = "There was an error setting the REFPROP function pointers, check types and names in header file";
+                err = "There was an error setting the REFPROP function pointers, check types and names in header file.";
                 return false;
             }
             char rpv[1000];
@@ -569,6 +575,5 @@ extern "C" {
     }
 
 #endif // REFPROP_IMPLEMENTATION
-
 
 #endif // REFPROP_LIB_H
