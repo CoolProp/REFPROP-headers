@@ -500,7 +500,7 @@ extern "C" {
 
         return true;
     }
-    bool load_REFPROP(std::string &err)
+    bool load_REFPROP(std::string &err, const std::string &shared_library_path = "")
     {
         // If REFPROP is not loaded
         if (RefpropdllInstance == NULL)
@@ -508,22 +508,33 @@ extern "C" {
 
             // Load it
             #if defined(__RPISWINDOWS__)
-                /* We need this logic on windows because if you use the bitness
-                 * macros it requires that the build bitness and the target bitness
-                 * are the same which is in general not the case.  Therefore, checking
-                 * both is safe
-                 */
+            /* We need this logic on windows because if you use the bitness
+             * macros it requires that the build bitness and the target bitness
+             * are the same which is in general not the case.  Therefore, checking
+             * both is safe
+             */
+            if (!shared_library_path.empty()){
+                TCHAR refpropdllstring[100];
+                strcpy(refpropdllstring, (shared_library_path + "REFPRP64.dll").c_str());
+                RefpropdllInstance = LoadLibrary(refpropdllstring);
+                if (RefpropdllInstance == NULL){
+                    strcpy(refpropdllstring, (shared_library_path + "REFPROP.dll").c_str());
+                    RefpropdllInstance = LoadLibrary(refpropdllstring);
+                }
+            }
+            else{
                 // First try to load the 64-bit version
                 // 64-bit code here.
                 TCHAR refpropdllstring[100] = TEXT("refprp64.dll");
                 RefpropdllInstance = LoadLibrary(refpropdllstring);
 
-                if (RefpropdllInstance==NULL){
+                if (RefpropdllInstance == NULL){
                     // That didn't work, let's try the 32-bit version
                     // 32-bit code here.
                     TCHAR refpropdllstring32[100] = TEXT("refprop.dll");
                     RefpropdllInstance = LoadLibrary(refpropdllstring32);
                 }
+            }
             #elif defined(__RPISLINUX__)
                 RefpropdllInstance = dlopen ("librefprop.so", RTLD_NOW);
             #elif defined(__RPISAPPLE__)
