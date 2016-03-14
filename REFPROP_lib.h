@@ -519,10 +519,10 @@ extern "C" {
              */
             if (!shared_library_path.empty()){
                 TCHAR refpropdllstring[100];
-                strcpy(refpropdllstring, (shared_library_path + "REFPRP64.dll").c_str());
+                strcpy((char*)refpropdllstring, (shared_library_path + "REFPRP64.dll").c_str());
                 RefpropdllInstance = LoadLibrary(refpropdllstring);
                 if (RefpropdllInstance == NULL){
-                    strcpy(refpropdllstring, (shared_library_path + "REFPROP.dll").c_str());
+                    strcpy((char*)refpropdllstring, (shared_library_path + "REFPROP.dll").c_str());
                     RefpropdllInstance = LoadLibrary(refpropdllstring);
                 }
             }
