@@ -366,9 +366,19 @@ extern "C" {
         // Define functions as pointers
         // Each will look something like: SETPATHdll_POINTER SETPATHdll;
         //
-        #define X(name)  name ## _POINTER name;
-            LIST_OF_REFPROP_FUNCTION_NAMES
-        #undef X
+        #ifdef REFPROP_IMPLEMENTATION
+            // Here we want to define them to be used in this file only
+            // since we are adding all the accessor functions
+            #define X(name)  name ## _POINTER name;
+                LIST_OF_REFPROP_FUNCTION_NAMES
+            #undef X
+        #else
+            // Otherwise, for other files adding the header, define the pointers to be extern, 
+            // so they can see the pointers in a read-only fashion
+            #define X(name)  extern name ## _POINTER name;
+                LIST_OF_REFPROP_FUNCTION_NAMES
+            #undef X
+        #endif
     #else
         // Otherwise this header becomes just a set of prototypes for the functions
         // defining the input parameters
