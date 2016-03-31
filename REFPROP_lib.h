@@ -20,6 +20,7 @@
     X(ACTVYdll) \
     X(AGdll) \
     X(CCRITdll) \
+    X(CHEMPOTdll) \
     X(CP0dll) \
     X(CRITPdll) \
     X(CSATKdll) \
@@ -187,7 +188,7 @@ extern "C" {
     // B12
     // Blcrvdll
     #define CCRITdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long
-    // CHEMPOT
+    #define CHEMPOTdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,double *, LONG_REF,char*,long 
     #define CP0dll_ARGS DOUBLE_REF, double *, DOUBLE_REF
     #define CRITPdll_ARGS double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
     #define CSATKdll_ARGS LONG_REF,DOUBLE_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
