@@ -422,6 +422,12 @@ extern "C" {
         #include <dlfcn.h>
         static void *RefpropdllInstance=NULL;
     #elif defined(__RPISWINDOWS__)
+
+        #if defined(_MSC_VER)
+        #ifndef _CRT_SECURE_NO_WARNINGS
+        #define _CRT_SECURE_NO_WARNINGS
+        #endif
+
         #ifndef NOMINMAX
             #define NOMINMAX
             #include <windows.h>
@@ -429,6 +435,11 @@ extern "C" {
         #else 
             #include <windows.h>
         #endif
+
+        #if defined(_MSC_VER)
+        #undef _CRT_SECURE_NO_WARNINGS
+        #endif
+
         static HINSTANCE RefpropdllInstance=NULL;
     #else
         #pragma error
