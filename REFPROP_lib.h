@@ -20,6 +20,7 @@
     X(ACTVYdll) \
     X(AGdll) \
     X(CCRITdll) \
+    X(CHEMPOTdll) \
     X(CP0dll) \
     X(CRITPdll) \
     X(CSATKdll) \
@@ -48,6 +49,7 @@
     X(ENTHALdll) \
     X(ENTROdll) \
     X(ESFLSHdll) \
+    X(EXCESSdll) \
     X(FGCTYdll) \
     X(FGCTY2dll) \
     X(FUGCOFdll) \
@@ -187,7 +189,7 @@ extern "C" {
     // B12
     // Blcrvdll
     #define CCRITdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long
-    // CHEMPOT
+    #define CHEMPOTdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,double *, LONG_REF,char*,long 
     #define CP0dll_ARGS DOUBLE_REF, double *, DOUBLE_REF
     #define CRITPdll_ARGS double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
     #define CSATKdll_ARGS LONG_REF,DOUBLE_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
@@ -225,7 +227,7 @@ extern "C" {
     // ETAK1
     // ETAKB
     // ETAKR
-    // EXCESS
+    #define EXCESSdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long
     #define FGCTY2dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,double *, LONG_REF,char*,long 
     #define FGCTYdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,double *
     #define FPVdll_ARGS DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF
@@ -420,6 +422,13 @@ extern "C" {
         #include <dlfcn.h>
         static void *RefpropdllInstance=NULL;
     #elif defined(__RPISWINDOWS__)
+
+        #if defined(_MSC_VER)
+        #ifndef _CRT_SECURE_NO_WARNINGS
+        #define _CRT_SECURE_NO_WARNINGS
+        #endif
+        #endif
+
         #ifndef NOMINMAX
             #define NOMINMAX
             #include <windows.h>
@@ -427,6 +436,11 @@ extern "C" {
         #else 
             #include <windows.h>
         #endif
+
+        #if defined(_MSC_VER)
+        #undef _CRT_SECURE_NO_WARNINGS
+        #endif
+
         static HINSTANCE RefpropdllInstance=NULL;
     #else
         #pragma error
