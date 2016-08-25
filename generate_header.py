@@ -24,15 +24,13 @@ def find_subroutine(lines, lineno):
     
     # Example: "subroutine pureflddll(icomp) ! in c:\Program Files (x86)\REFPROP\fortran\PASS_FTN.FOR"
     # Example: "subroutine unsetagadll ! in c:\Program Files (x86)\REFPROP\fortran\PASS_FTN.FOR"
-    name_part, argument_part = lines[istart].split('(',1)
-    sub, name = name_part.rsplit(' ', 1)
-    if name == '' and '! in' in sub:
-        arguments = []
-        name = sub.split('!')[0].split(' ')[1]
-    elif '! in' in sub:
-        arguments = []
+    splitted = lines[istart].split(' ')
+    sub, name_arguments = splitted[0], splitted[1]
+    if '(' in name_arguments:
+        name, arguments = name_arguments.split('(')
+        arguments = arguments.rstrip(')').split(',')
     else:
-        arguments = argument_part.split(')')[0].split(',')
+        name, arguments = name_arguments, []    
     
     argument_list, string_arguments = [], []
     for offset, argument in enumerate(arguments):
