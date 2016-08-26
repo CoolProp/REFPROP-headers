@@ -37,7 +37,10 @@ def find_subroutine(lines, lineno):
         type, argname = lines[istart + 1 + offset].split(' :: ')
         if 'character' in type:
             # Example: "     character*10000 :: hfld"
-            string_length = int(type.split('*')[1])
+            if type.strip() == 'character*(*)':
+                string_length = -1
+            else:
+                string_length = int(type.split('*')[1])
             string_arguments.append((argname.strip()+'_length', string_length))
             argument_list.append((argname.strip(), 'char *'))
         elif 'integer' in type:
