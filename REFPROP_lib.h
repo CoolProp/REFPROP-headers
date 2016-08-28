@@ -159,7 +159,6 @@ const static long maxcoefs = 50;
 
 // define new macros for function names
 // http://stackoverflow.com/questions/195975/how-to-make-a-char-string-from-a-c-macros-value
-#include <string.h>
 #define STR_VALUE(arg)      #arg
 #define FUNCTION_NAME(name) STR_VALUE(name)
 #define STRINGIFY(name) STR_VALUE(name)
@@ -411,11 +410,6 @@ extern "C" {
     #error REFPROP_IMPLEMENTATION can only be used in C++
     #endif
 
-    #include <string>
-    #include <algorithm>
-
-    static std::string RPVersion_loaded = "";
-
     #if defined(__powerpc__)
         static void *RefpropdllInstance=NULL;
     #elif defined(__RPISLINUX__) || defined(__RPISAPPLE__)
@@ -437,14 +431,19 @@ extern "C" {
             #include <windows.h>
         #endif
 
-        #if defined(_MSC_VER)
-        #undef _CRT_SECURE_NO_WARNINGS
-        #endif
-
         static HINSTANCE RefpropdllInstance=NULL;
     #else
         #pragma error
     #endif
+
+    #include <string>
+    #include <algorithm>
+
+    #if defined(_MSC_VER)
+    #undef _CRT_SECURE_NO_WARNINGS
+    #endif
+
+    static std::string RPVersion_loaded = "";
 
     enum DLLNameManglingStyle{ NO_NAME_MANGLING = 0, LOWERCASE_NAME_MANGLING, LOWERCASE_AND_UNDERSCORE_NAME_MANGLING };
     
