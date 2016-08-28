@@ -411,8 +411,10 @@ extern "C" {
     #endif
 
     #if defined(__powerpc__)
+        #include <cstring>
         static void *RefpropdllInstance=NULL;
     #elif defined(__RPISLINUX__) || defined(__RPISAPPLE__)
+        #include <cstring>
         #include <dlfcn.h>
         static void *RefpropdllInstance=NULL;
     #elif defined(__RPISWINDOWS__)
@@ -430,7 +432,7 @@ extern "C" {
         #else 
             #include <windows.h>
         #endif
-
+        
         static HINSTANCE RefpropdllInstance=NULL;
     #else
         #pragma error
