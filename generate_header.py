@@ -120,7 +120,7 @@ def write_header(function_dict, output_header_file):
     
 if __name__=='__main__':
     # Uncomment for local testing
-    sys.argv += ['--FORTRAN-path', r'/Users/ihb/Downloads/911FILES']
+    # sys.argv += ['--FORTRAN-path', r'/Users/ihb/Downloads/911FILES']
 
     # Parse args first
     import argparse
