@@ -76,7 +76,7 @@ def arguments_to_string(args, string_arguments):
             else:
                 outs.append(arg[1]+arg[0]+'/* ' + arg[2] + " */")
         else:
-            print arg
+            print(arg)
     for arg in string_arguments:
         outs.append('int '+arg[0]+'/* ' + str(arg[1]) + " */")
         
