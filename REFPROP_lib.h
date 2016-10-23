@@ -537,12 +537,11 @@ extern "C" {
         {
             // Load it
             #if defined(__RPISWINDOWS__)
-            /* We need this logic on windows because if you use the bitness
-             * macros it requires that the build bitness and the target bitness
-             * are the same which is in general not the case.  Therefore, checking
-             * both is safe
-             */
-            if (!shared_library_path.empty()){
+                /* We need this logic on windows because if you use the bitness
+                 * macros it requires that the build bitness and the target bitness
+                 * are the same which is in general not the case.  Therefore, checking
+                 * both is safe
+                 */
                 TCHAR refpropdllstring[100];
                 strcpy((char*)refpropdllstring, (shared_library_path + "REFPRP64.dll").c_str());
                 RefpropdllInstance = LoadLibrary(refpropdllstring);
@@ -550,24 +549,10 @@ extern "C" {
                     strcpy((char*)refpropdllstring, (shared_library_path + "REFPROP.dll").c_str());
                     RefpropdllInstance = LoadLibrary(refpropdllstring);
                 }
-            }
-            else{
-                // First try to load the 64-bit version
-                // 64-bit code here.
-                TCHAR refpropdllstring[100] = TEXT("refprp64.dll");
-                RefpropdllInstance = LoadLibrary(refpropdllstring);
-
-                if (RefpropdllInstance == NULL){
-                    // That didn't work, let's try the 32-bit version
-                    // 32-bit code here.
-                    TCHAR refpropdllstring32[100] = TEXT("refprop.dll");
-                    RefpropdllInstance = LoadLibrary(refpropdllstring32);
-                }
-            }
             #elif defined(__RPISLINUX__)
-                RefpropdllInstance = dlopen ("librefprop.so", RTLD_NOW);
+                RefpropdllInstance = dlopen ((shared_library_path + "librefprop.so").c_str(), RTLD_NOW);
             #elif defined(__RPISAPPLE__)
-                RefpropdllInstance = dlopen ("librefprop.dylib", RTLD_NOW);
+                RefpropdllInstance = dlopen ((shared_library_path + "librefprop.dylib").c_str(), RTLD_NOW);
             #else
                 RefpropdllInstance = NULL;
             #endif
