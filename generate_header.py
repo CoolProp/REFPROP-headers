@@ -1,21 +1,22 @@
 from __future__ import print_function
-import subprocess, sys, six
-from numpy.f2py import f2py2e
+import subprocess, sys, six, os
+import numpy
 
-def generate_interface_file(REFPROP_FORTRAN_path, interface_file_path):
+def generate_interface_file(REFPROP_FORTRAN_path, interface_file_path, verbose = False):
     """
     Use f2py to parse PASS_FTN.FOR to generate a python-directed header file
     """
     # Call f2py to generate .pyf file
     from subprocess import Popen, PIPE
-    print('About to write the .pyf file, please be patient...')
+    print('Writing the .pyf file with numpy.f2py, please be patient...')
     p = Popen(['python','-m','numpy.f2py','--quiet','-h',interface_file_path,REFPROP_FORTRAN_path], stdin=PIPE, stdout=PIPE, stderr=PIPE)
     output, err = p.communicate()
     rc = p.returncode
-    if rc != 0:
-        print('f2py error:', err)
-        print('Unable to call f2py successfully. output log:')
-        print(output)
+    # If the REFPROP.pyf file was not generated successfully, that's an error
+    if not os.path.exists(interface_file_path):
+        if verbose:
+            print(output)
+        raise ValueError('Unable to call f2py successfully: '+str(err))
         
 def find_subroutine(lines, lineno):
     istart = -1; iend = -1
@@ -144,5 +145,5 @@ if __name__=='__main__':
 
     write_header(dd,'REFPROP.h')
     if not args.keep_pyf:
-        print('deleting REFPROP.pyf')
+        print('Deleting REFPROP.pyf')
         os.remove('REFPROP.pyf')
