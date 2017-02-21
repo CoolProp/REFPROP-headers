@@ -1,3 +1,4 @@
+from __future__ import print_function
 import subprocess, sys, six
 from numpy.f2py import f2py2e
 
@@ -5,8 +6,16 @@ def generate_interface_file(REFPROP_FORTRAN_path, interface_file_path):
     """
     Use f2py to parse PASS_FTN.FOR to generate a python-directed header file
     """
-    # Call f2py programmatically 
-    f2py2e.run_main(['--quiet','-h',interface_file_path,REFPROP_FORTRAN_path])
+    # Call f2py to generate .pyf file
+    from subprocess import Popen, PIPE
+    print('About to write the .pyf file, please be patient...')
+    p = Popen(['python','-m','numpy.f2py','--quiet','-h',interface_file_path,REFPROP_FORTRAN_path], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    output, err = p.communicate(b"input data that is passed to subprocess' stdin")
+    rc = p.returncode
+    if rc != 0:
+        print('f2py error:', BE)
+        print('Unable to call f2py successfully. Error log:')
+        print(out_buffer)
         
 def find_subroutine(lines, lineno):
     istart = -1; iend = -1
@@ -76,7 +85,7 @@ def arguments_to_string(args, string_arguments):
             else:
                 outs.append(arg[1]+arg[0]+'/* ' + arg[2] + " */")
         else:
-            print arg
+            print(arg)
     for arg in string_arguments:
         outs.append('int '+arg[0]+'/* ' + str(arg[1]) + " */")
         
