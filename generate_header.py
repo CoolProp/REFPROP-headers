@@ -10,12 +10,12 @@ def generate_interface_file(REFPROP_FORTRAN_path, interface_file_path):
     from subprocess import Popen, PIPE
     print('About to write the .pyf file, please be patient...')
     p = Popen(['python','-m','numpy.f2py','--quiet','-h',interface_file_path,REFPROP_FORTRAN_path], stdin=PIPE, stdout=PIPE, stderr=PIPE)
-    output, err = p.communicate(b"input data that is passed to subprocess' stdin")
+    output, err = p.communicate()
     rc = p.returncode
     if rc != 0:
-        print('f2py error:', BE)
-        print('Unable to call f2py successfully. Error log:')
-        print(out_buffer)
+        print('f2py error:', err)
+        print('Unable to call f2py successfully. output log:')
+        print(output)
         
 def find_subroutine(lines, lineno):
     istart = -1; iend = -1
