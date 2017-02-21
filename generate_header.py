@@ -128,7 +128,21 @@ def write_header(function_dict, output_header_file):
         fp.write(ostring)
     
 if __name__=='__main__':
+    # Uncomment for local testing
+    # sys.argv += ['--FORTRAN-path', r'/Users/ihb/Downloads/911FILES']
+
+    # Parse args first
+    import argparse
+    parser = argparse.ArgumentParser(description='Run the generator for .')
+    parser.add_argument('--FORTRAN-path', nargs=1, required =True, default="", help="The directory containing the FORTRAN source files")
+    parser.add_argument('--keep-pyf', nargs='?', const=True, default=False, help="If defined, the intermediate pyf file will be kept, otherwise it will be deleted")
+    args = parser.parse_args()
+
     # Change these paths as needed
-    generate_interface_file(r'c:\Program Files (x86)\REFPROP\fortran\PASS_FTN.FOR', 'REFPROP.pyf')
+    generate_interface_file(os.path.join(args.FORTRAN_path[0],'PASS_FTN.FOR'), 'REFPROP.pyf')
     dd = generate_function_dict('REFPROP.pyf')
+
     write_header(dd,'REFPROP.h')
+    if not args.keep_pyf:
+        print('deleting REFPROP.pyf')
+        os.remove('REFPROP.pyf')
