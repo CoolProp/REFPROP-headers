@@ -530,7 +530,28 @@ extern "C" {
 
         return true;
     }
-    bool load_REFPROP(std::string &err, const std::string &shared_library_path = "")
+    // See http://stackoverflow.com/questions/874134/find-if-string-ends-with-another-string-in-c
+    inline bool ends_with(std::string const & value, std::string const & ending) {
+        if (value.empty()) return false;
+        if (ending.empty()) return false;
+        if (ending.size() > value.size()) return false;
+        return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+    }
+    std::string join_path(const std::string const &one, const std::string const &two) {
+        std::string result = one;
+        std::string separator;
+        #if defined(__RPISWINDOWS__)
+            separator = "\\";
+        #elif defined(__RPISLINUX__)
+            separator = "/";
+        #elif defined(__RPISAPPLE__)
+            separator = "/";
+        #endif
+        if (!ends_with(result, separator) && !result.empty()) result.append(separator);
+        result.append(two);
+        return result;
+    }
+    bool load_REFPROP(std::string &err, const std::string const &shared_library_path = "", const std::string const &shared_library_name = "")
     {
         // If REFPROP is not loaded
         if (RefpropdllInstance == NULL)
@@ -542,17 +563,38 @@ extern "C" {
                  * are the same which is in general not the case.  Therefore, checking
                  * both is safe
                  */
-                TCHAR refpropdllstring[100];
-                strcpy((char*)refpropdllstring, (shared_library_path + "REFPRP64.dll").c_str());
+                TCHAR refpropdllstring[_MAX_PATH];
+                if (shared_library_name.empty()) {
+                    strcpy((char*)refpropdllstring, join_path(shared_library_path, "REFPRP64.dll").c_str());
+                } else {
+                    strcpy((char*)refpropdllstring, join_path(shared_library_path, shared_library_name).c_str());
+                }
                 RefpropdllInstance = LoadLibrary(refpropdllstring);
                 if (RefpropdllInstance == NULL){
-                    strcpy((char*)refpropdllstring, (shared_library_path + "REFPROP.dll").c_str());
+                    strcpy((char*)refpropdllstring, join_path(shared_library_path, "REFPROP.dll").c_str());
                     RefpropdllInstance = LoadLibrary(refpropdllstring);
                 }
+                DWORD lastError;
+                HMODULE hModule;
+                TCHAR dllPath[_MAX_PATH];
+                if (RefpropdllInstance == NULL){
+                    lastError = GetLastError(); // returns error
+                } else {
+                    hModule = GetModuleHandle(refpropdllstring);
+                    GetModuleFileName(hModule, dllPath, _MAX_PATH);
+                }
             #elif defined(__RPISLINUX__)
-                RefpropdllInstance = dlopen ((shared_library_path + "librefprop.so").c_str(), RTLD_NOW);
+                if (shared_library_name.empty()) {
+                    RefpropdllInstance = dlopen (join_path(shared_library_path, "librefprop.so").c_str(), RTLD_NOW);
+                } else {
+                    RefpropdllInstance = dlopen (join_path(shared_library_path, shared_library_name).c_str(), RTLD_NOW);
+                }                
             #elif defined(__RPISAPPLE__)
-                RefpropdllInstance = dlopen ((shared_library_path + "librefprop.dylib").c_str(), RTLD_NOW);
+                if (shared_library_name.empty()) {
+                    RefpropdllInstance = dlopen (join_path(shared_library_path, "librefprop.dylib").c_str(), RTLD_NOW);
+                } else {
+                    RefpropdllInstance = dlopen (join_path(shared_library_path, shared_library_name).c_str(), RTLD_NOW);
+                }
             #else
                 RefpropdllInstance = NULL;
             #endif
@@ -560,7 +602,7 @@ extern "C" {
             if (RefpropdllInstance == NULL)
             {
                 #if defined(__RPISWINDOWS__)
-                    err = "Could not load refprop.dll, make sure it is in your system search path. In case you run 64bit and you have a REFPROP license, try installing the 64bit DLL from NIST.";
+                    err = "Could not load REFPROP, make sure it is in your system search path. In case you run 64bit and you have a REFPROP license, try installing the 64bit DLL from NIST.";
                 #elif defined(__RPISLINUX__)
                     err = "Could not load librefprop.so, make sure it is in your system search path.";
                 #elif defined(__RPISAPPLE__)
