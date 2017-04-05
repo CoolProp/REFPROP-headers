@@ -538,14 +538,14 @@ extern "C" {
     }
 
     // See http://stackoverflow.com/questions/874134/find-if-string-ends-with-another-string-in-c
-    inline bool RP_ends_with(std::string const & value, std::string const & ending) {
+    inline bool RP_ends_with(const std::string & value, const std::string & ending) {
         if (value.empty()) return false;
         if (ending.empty()) return false;
         if (ending.size() > value.size()) return false;
         return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
     }
 
-    std::string RP_join_path(const std::string const &one, const std::string const &two) {
+    std::string RP_join_path(const std::string &one, const std::string &two) {
         std::string result;
         std::string separator;
         #if defined(__RPISWINDOWS__)
@@ -562,7 +562,7 @@ extern "C" {
         return result;
     }
 
-    bool load_REFPROP(std::string &err, const std::string const &shared_library_path = "", const std::string const &shared_library_name = "")
+    bool load_REFPROP(std::string &err, const std::string &shared_library_path = "", const std::string &shared_library_name = "")
     {
         // If REFPROP is not loaded
         if (RefpropdllInstance == NULL)
