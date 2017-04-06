@@ -432,7 +432,11 @@ extern "C" {
         #else 
             #include <windows.h>
         #endif
-        
+
+        #if defined(_MSC_VER)
+        #undef _CRT_SECURE_NO_WARNINGS
+        #endif
+
         static HINSTANCE RefpropdllInstance=NULL;
     #else
         #pragma error
@@ -440,10 +444,6 @@ extern "C" {
 
     #include <string>
     #include <algorithm>
-
-    #if defined(_MSC_VER)
-    #undef _CRT_SECURE_NO_WARNINGS
-    #endif
 
     // Define the default library names
     const static std::string shared_lib_WIN64 = "REFPRP64.dll";
