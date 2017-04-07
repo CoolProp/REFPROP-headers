@@ -159,7 +159,6 @@ const static long maxcoefs = 50;
 
 // define new macros for function names
 // http://stackoverflow.com/questions/195975/how-to-make-a-char-string-from-a-c-macros-value
-#include <string.h>
 #define STR_VALUE(arg)      #arg
 #define FUNCTION_NAME(name) STR_VALUE(name)
 #define STRINGIFY(name) STR_VALUE(name)
@@ -411,14 +410,11 @@ extern "C" {
     #error REFPROP_IMPLEMENTATION can only be used in C++
     #endif
 
-    #include <string>
-    #include <algorithm>
-
-    static std::string RPVersion_loaded = "";
-
     #if defined(__powerpc__)
+        #include <cstring>
         static void *RefpropdllInstance=NULL;
     #elif defined(__RPISLINUX__) || defined(__RPISAPPLE__)
+        #include <cstring>
         #include <dlfcn.h>
         static void *RefpropdllInstance=NULL;
     #elif defined(__RPISWINDOWS__)
@@ -445,6 +441,18 @@ extern "C" {
     #else
         #pragma error
     #endif
+
+    #include <sstream>
+    #include <string>
+    #include <algorithm>
+
+    // Define the default library names
+    const static std::string shared_lib_WIN64 = "REFPRP64.dll";
+    const static std::string shared_lib_WIN32 = "REFPROP.dll";
+    const static std::string shared_lib_LINUX = "librefprop.so";
+    const static std::string shared_lib_APPLE = "librefprop.dylib";
+
+    static std::string RPVersion_loaded = "";
 
     enum DLLNameManglingStyle{ NO_NAME_MANGLING = 0, LOWERCASE_NAME_MANGLING, LOWERCASE_AND_UNDERSCORE_NAME_MANGLING };
     
@@ -529,44 +537,85 @@ extern "C" {
 
         return true;
     }
-    bool load_REFPROP(std::string &err, const std::string &shared_library_path = "")
+
+    // See http://stackoverflow.com/questions/874134/find-if-string-ends-with-another-string-in-c
+    inline bool RP_ends_with(const std::string & value, const std::string & ending) {
+        if (value.empty()) return false;
+        if (ending.empty()) return false;
+        if (ending.size() > value.size()) return false;
+        return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+    }
+
+    std::string RP_join_path(const std::string &one, const std::string &two) {
+        std::string result;
+        std::string separator;
+        #if defined(__RPISWINDOWS__)
+            separator = "\\";
+        #elif defined(__RPISLINUX__)
+            separator = "/";
+        #elif defined(__RPISAPPLE__)
+            separator = "/";
+        #endif
+        if (!RP_ends_with(one, separator) && !one.empty()) {
+            result = one + separator;
+        }
+        result.append(two);
+        return result;
+    }
+
+    bool load_REFPROP(std::string &err, const std::string &shared_library_path = "", const std::string &shared_library_name = "")
     {
         // If REFPROP is not loaded
         if (RefpropdllInstance == NULL)
         {
             // Load it
             #if defined(__RPISWINDOWS__)
-            /* We need this logic on windows because if you use the bitness
-             * macros it requires that the build bitness and the target bitness
-             * are the same which is in general not the case.  Therefore, checking
-             * both is safe
-             */
-            if (!shared_library_path.empty()){
-                TCHAR refpropdllstring[100];
-                strcpy((char*)refpropdllstring, (shared_library_path + "REFPRP64.dll").c_str());
-                RefpropdllInstance = LoadLibrary(refpropdllstring);
-                if (RefpropdllInstance == NULL){
-                    strcpy((char*)refpropdllstring, (shared_library_path + "REFPROP.dll").c_str());
+                /* We need this logic on windows because if you use the bitness
+                 * macros it requires that the build bitness and the target bitness
+                 * are the same which is in general not the case.  Therefore, checking
+                 * both is safe
+                 */
+                TCHAR refpropdllstring[_MAX_PATH];
+                if (shared_library_name.empty()) {
+                    strcpy((char*)refpropdllstring, RP_join_path(shared_library_path, shared_lib_WIN64).c_str());
+                    RefpropdllInstance = LoadLibrary(refpropdllstring);
+                    if (RefpropdllInstance == NULL) {
+                        strcpy((char*)refpropdllstring, RP_join_path(shared_library_path, shared_lib_WIN32).c_str());
+                        RefpropdllInstance = LoadLibrary(refpropdllstring);
+                    }
+                } else {
+                    strcpy((char*)refpropdllstring, RP_join_path(shared_library_path, shared_library_name).c_str());
                     RefpropdllInstance = LoadLibrary(refpropdllstring);
                 }
-            }
-            else{
-                // First try to load the 64-bit version
-                // 64-bit code here.
-                TCHAR refpropdllstring[100] = TEXT("refprp64.dll");
-                RefpropdllInstance = LoadLibrary(refpropdllstring);
-
+                std::stringstream msg_stream;
+                std::string msg;
                 if (RefpropdllInstance == NULL){
-                    // That didn't work, let's try the 32-bit version
-                    // 32-bit code here.
-                    TCHAR refpropdllstring32[100] = TEXT("refprop.dll");
-                    RefpropdllInstance = LoadLibrary(refpropdllstring32);
+                    msg_stream << GetLastError(); // returns error
+                    msg = msg_stream.str();
+                } else {
+                    TCHAR dllPath[_MAX_PATH];
+                    HMODULE hModule;
+                    hModule = GetModuleHandle(refpropdllstring);
+                    GetModuleFileName(hModule, dllPath, _MAX_PATH);
+                    #ifndef UNICODE
+                        msg = dllPath;
+                    #else
+                        std::wstring wStr = t;
+                        msg = std::string(wStr.begin(), wStr.end());
+                    #endif
                 }
-            }
             #elif defined(__RPISLINUX__)
-                RefpropdllInstance = dlopen ("librefprop.so", RTLD_NOW);
+                if (shared_library_name.empty()) {
+                    RefpropdllInstance = dlopen (join_path(shared_library_path, shared_lib_LINUX).c_str(), RTLD_NOW);
+                } else {
+                    RefpropdllInstance = dlopen (join_path(shared_library_path, shared_library_name).c_str(), RTLD_NOW);
+                }                
             #elif defined(__RPISAPPLE__)
-                RefpropdllInstance = dlopen ("librefprop.dylib", RTLD_NOW);
+                if (shared_library_name.empty()) {
+                    RefpropdllInstance = dlopen (join_path(shared_library_path, shared_lib_APPLE).c_str(), RTLD_NOW);
+                } else {
+                    RefpropdllInstance = dlopen (join_path(shared_library_path, shared_library_name).c_str(), RTLD_NOW);
+                }
             #else
                 RefpropdllInstance = NULL;
             #endif
@@ -574,11 +623,11 @@ extern "C" {
             if (RefpropdllInstance == NULL)
             {
                 #if defined(__RPISWINDOWS__)
-                    err = "Could not load refprop.dll, make sure it is in your system search path. In case you run 64bit and you have a REFPROP license, try installing the 64bit DLL from NIST.";
+                    err = "Could not load REFPROP ("+shared_lib_WIN64+", "+shared_lib_WIN32+") due to error "+ msg +", make sure it is in your system search path. In case you run 64bit and you have a REFPROP license, try installing the 64bit DLL from NIST.";
                 #elif defined(__RPISLINUX__)
-                    err = "Could not load librefprop.so, make sure it is in your system search path.";
+                    err = "Could not load REFPROP ("+shared_lib_LINUX+"), make sure it is in your system search path.";
                 #elif defined(__RPISAPPLE__)
-                    err = "Could not load librefprop.dylib, make sure it is in your system search path.";
+                    err = "Could not load REFPROP ("+shared_lib_APPLE+"), make sure it is in your system search path.";
                 #else
                     err = "Something is wrong with the platform definition, you should not end up here.";
                 #endif
