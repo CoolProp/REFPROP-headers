@@ -558,6 +558,8 @@ extern "C" {
         #endif
         if (!RP_ends_with(one, separator) && !one.empty()) {
             result = one + separator;
+        } else {
+            result = one;
         }
         result.append(two);
         return result;
