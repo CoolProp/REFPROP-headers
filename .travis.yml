@@ -1,0 +1,46 @@
+
+notifications:
+  email:
+    on_success: never
+    on_failure: change
+
+language: 
+  - cpp
+
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      compiler: gcc
+    - os: linux
+      dist: trusty
+      compiler: clang
+    - os: linux 
+      dist: trusty
+      addons:
+        coverity_scan:
+          project:
+            name: "CoolProp/REFPROP-headers"
+            description: "Build submitted via Travis CI"
+          notification_email: jowr@ipu.dk
+          build_command_prepend: "cmake ."
+          build_command: "cmake --build . --target Main"
+          branch_pattern: coverity_scan
+
+# Build all branches
+branches:
+  only:
+    - /.*/ 
+
+env:
+  global:
+    - secure:  "NPlkNTLzYM1bZgI09fsoShW36AmEQq7VJHARIxQkv37rvhEMcEzkWSumEvoZrVlk5v0oGSFofllAAUI9cIdDjBd6nQ8wyO+/PMFliiU5CtwAjA7WMwRHloH/G8dxbHbLFl/ahHrkIyyGuaJDMfsmd6VMBSmIVpbHUHeobbr6oUU="
+
+before_script:
+  - mkdir -p build
+  - pushd build
+  - cmake ..
+  - popd
+
+script:
+  - cmake --build build --target Main
