@@ -608,15 +608,15 @@ extern "C" {
                 }
             #elif defined(__RPISLINUX__)
                 if (shared_library_name.empty()) {
-                    RefpropdllInstance = dlopen (join_path(shared_library_path, shared_lib_LINUX).c_str(), RTLD_NOW);
+                    RefpropdllInstance = dlopen (RP_join_path(shared_library_path, shared_lib_LINUX).c_str(), RTLD_NOW);
                 } else {
-                    RefpropdllInstance = dlopen (join_path(shared_library_path, shared_library_name).c_str(), RTLD_NOW);
+                    RefpropdllInstance = dlopen (RP_join_path(shared_library_path, shared_library_name).c_str(), RTLD_NOW);
                 }                
             #elif defined(__RPISAPPLE__)
                 if (shared_library_name.empty()) {
-                    RefpropdllInstance = dlopen (join_path(shared_library_path, shared_lib_APPLE).c_str(), RTLD_NOW);
+                    RefpropdllInstance = dlopen (RP_join_path(shared_library_path, shared_lib_APPLE).c_str(), RTLD_NOW);
                 } else {
-                    RefpropdllInstance = dlopen (join_path(shared_library_path, shared_library_name).c_str(), RTLD_NOW);
+                    RefpropdllInstance = dlopen (RP_join_path(shared_library_path, shared_library_name).c_str(), RTLD_NOW);
                 }
             #else
                 RefpropdllInstance = NULL;
