@@ -3,6 +3,7 @@
 #include "REFPROP_lib.h"
 #undef REFPROP_IMPLEMENTATION
 #include <stdlib.h>
+#include <stdio.h>
 
 // Prototype from the other file
 void another_file(void);
