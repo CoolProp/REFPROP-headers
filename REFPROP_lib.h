@@ -135,6 +135,8 @@ const static long ncmax = 20;
 const static long numparams = 72;
 const static long maxcoefs = 50;
 
+const static long componentstringlength = 10000; // Length of component_string (see PASS_FTN.for from REFPROP)
+
 // Get the platform identifiers, some overlap with "PlatformDetermination.h" from CoolProp's main repo 
 // See also http://stackoverflow.com/questions/5919996/how-to-detect-reliably-mac-os-x-ios-linux-windows-in-c-preprocessor
 #if defined(_WIN32) || defined(__WIN32__) || defined(_WIN64) || defined(__WIN64__)
@@ -641,7 +643,7 @@ extern "C" {
                 err = "There was an error setting the REFPROP function pointers, check types and names in header file.";
                 return false;
             }
-            char rpv[1000];
+            char rpv[1000] = { '\0' };
             RPVersion(rpv, 1000);
             RPVersion_loaded = rpv;
             return true;
