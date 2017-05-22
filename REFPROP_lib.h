@@ -455,7 +455,7 @@ extern "C" {
     const static std::string shared_lib_APPLE = "librefprop.dylib";
 
     static std::string RPVersion_loaded = "";
-    static std::string RPPathloaded = "";
+    static std::string RPPath_loaded = "";
 
     enum DLLNameManglingStyle{ NO_NAME_MANGLING = 0, LOWERCASE_NAME_MANGLING, LOWERCASE_AND_UNDERSCORE_NAME_MANGLING };
     
@@ -608,27 +608,27 @@ extern "C" {
                         std::wstring wStr = t;
                         msg = std::string(wStr.begin(), wStr.end());
                     #endif
-                    RPPathloaded = msg;
+                    RPPath_loaded = msg;
                 }
             #elif defined(__RPISLINUX__)
                 if (shared_library_name.empty()) {
                     RefpropdllInstance = dlopen (RP_join_path(shared_library_path, shared_lib_LINUX).c_str(), RTLD_NOW);
-                    RPPathloaded = RP_join_path(shared_library_path, shared_lib_LINUX);
+                    RPPath_loaded = RP_join_path(shared_library_path, shared_lib_LINUX);
                 } else {
                     RefpropdllInstance = dlopen (RP_join_path(shared_library_path, shared_library_name).c_str(), RTLD_NOW);
-                    RPPathloaded = RP_join_path(shared_library_path, shared_library_name);
+                    RPPath_loaded = RP_join_path(shared_library_path, shared_library_name);
                 }                
             #elif defined(__RPISAPPLE__)
                 if (shared_library_name.empty()) {
                     RefpropdllInstance = dlopen (RP_join_path(shared_library_path, shared_lib_APPLE).c_str(), RTLD_NOW);
-                    RPPathloaded = RP_join_path(shared_library_path, shared_lib_APPLE);
+                    RPPath_loaded = RP_join_path(shared_library_path, shared_lib_APPLE);
                 } else {
                     RefpropdllInstance = dlopen (RP_join_path(shared_library_path, shared_library_name).c_str(), RTLD_NOW);
-                    RPPathloaded = RP_join_path(shared_library_path, shared_library_name);
+                    RPPath_loaded = RP_join_path(shared_library_path, shared_library_name);
                 }
             #else
                 RefpropdllInstance = NULL;
-                RPPathloaded = "";
+                RPPath_loaded = "";
             #endif
 
             if (RefpropdllInstance == NULL)
