@@ -1,5 +1,5 @@
 from __future__ import print_function
-import subprocess, sys, six, os
+import subprocess, sys, six, os, re
 import numpy
 
 def generate_interface_file(REFPROP_FORTRAN_path, interface_file_path, verbose = False):
@@ -45,6 +45,20 @@ def find_subroutine(lines, lineno):
     argument_list, string_arguments = [], []
     for offset, argument in enumerate(arguments):
         type, argname = lines[istart + 1 + offset].split(' :: ')
+
+        """
+        Examples:
+        character*10000 intent(in) :: hfiles
+        integer intent(out) :: ierr
+        double precision dimension(20),intent(in) :: x0
+        """
+        # Split out the dimension and intent annotations
+        matches = re.search(r'intent|dimension', type)
+        intent_dimension = ''
+        if matches:
+            intent_dimension = type[matches.start(0)::]
+            type = type[0:matches.start(0)]
+
         if 'character' in type:
             # Example: "     character*10000 :: hfld"
             if type.strip() == 'character*(*)':
@@ -54,13 +68,13 @@ def find_subroutine(lines, lineno):
             string_arguments.append((argname.strip()+'_length', string_length))
             argument_list.append((argname.strip(), 'char *'))
         elif 'integer' in type:
-            if 'dimension' in type:
+            if 'dimension' in intent_dimension:
                 raise ValueError(type)
             argument_list.append((argname.strip(), 'int *'))
         elif 'double' in type:
             L = 0
-            if 'dimension' in type:
-                L = type.split('dimension(')[1].split(')')[0]
+            if 'dimension' in intent_dimension:
+                L = re.findall(r'dimension\(([0-9]*)\)', intent_dimension)[0]
             argument_list.append((argname.strip(), 'double *', L))
         else:
             raise ValueError(lines[istart + 1 + offset].strip())
