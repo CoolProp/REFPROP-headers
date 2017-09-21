@@ -9,7 +9,7 @@ def generate_interface_file(REFPROP_FORTRAN_path, interface_file_path, verbose =
     # Call f2py to generate .pyf file
     from subprocess import Popen, PIPE
     print('Writing the .pyf file with numpy.f2py, please be patient...')
-    p = Popen(['python','-m','numpy.f2py','--quiet','-h',interface_file_path,REFPROP_FORTRAN_path], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    p = Popen(['python','-m','numpy.f2py','--quiet','--no-lower','-h',interface_file_path,REFPROP_FORTRAN_path], stdin=PIPE, stdout=PIPE, stderr=PIPE)
     output, err = p.communicate()
     rc = p.returncode
     # If the REFPROP.pyf file was not generated successfully, that's an error
@@ -87,7 +87,8 @@ def find_subroutine(lines, lineno):
                 )
         
 def correct_name_case(name):
-    return name.upper().replace('DLL','dll')
+    """ Previously we had to modify the case; this function is a no-op now """
+    return name
     
 def arguments_to_string(args, string_arguments):
     outs = []
