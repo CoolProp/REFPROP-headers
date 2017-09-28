@@ -68,9 +68,10 @@ def find_subroutine(lines, lineno):
             string_arguments.append((argname.strip()+'_length', string_length))
             argument_list.append((argname.strip(), 'char *'))
         elif 'integer' in type:
+            L = 0
             if 'dimension' in intent_dimension:
-                raise ValueError(type)
-            argument_list.append((argname.strip(), 'int *'))
+                L = re.findall(r'dimension\(([0-9]*)\)', intent_dimension)[0]
+            argument_list.append((argname.strip(), 'int *', L))
         elif 'double' in type:
             L = 0
             if 'dimension' in intent_dimension:
