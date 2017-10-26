@@ -2,14 +2,14 @@ from __future__ import print_function
 import subprocess, sys, six, os, re
 import numpy
 
-def generate_interface_file(REFPROP_FORTRAN_path, interface_file_path, verbose = False):
+def generate_interface_file(REFPROP_FORTRAN_path, interface_file_path, verbose = False, python_exe = 'python'):
     """
     Use f2py to parse PASS_FTN.FOR to generate a python-directed header file
     """
     # Call f2py to generate .pyf file
     from subprocess import Popen, PIPE
     print('Writing the .pyf file with numpy.f2py, please be patient...')
-    p = Popen(['python','-m','numpy.f2py','--quiet','--no-lower','-h',interface_file_path,REFPROP_FORTRAN_path], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    p = Popen([python_exe,'-m','numpy.f2py','--quiet','--no-lower','-h',interface_file_path,REFPROP_FORTRAN_path], stdin=PIPE, stdout=PIPE, stderr=PIPE)
     output, err = p.communicate()
     rc = p.returncode
     # If the REFPROP.pyf file was not generated successfully, that's an error
@@ -153,10 +153,11 @@ if __name__=='__main__':
     parser = argparse.ArgumentParser(description='Run the generator for .')
     parser.add_argument('--FORTRAN-path', nargs=1, required =True, default="", help="The directory containing the FORTRAN source files")
     parser.add_argument('--keep-pyf', nargs='?', const=True, default=False, help="If defined, the intermediate pyf file will be kept, otherwise it will be deleted")
+    parser.add_argument('--python-exe', nargs=1, default="python", help="The python exe to be used to build the interface")
     args = parser.parse_args()
 
     # Change these paths as needed
-    generate_interface_file(os.path.join(args.FORTRAN_path[0],'PASS_FTN.FOR'), 'REFPROP.pyf')
+    generate_interface_file(os.path.join(args.FORTRAN_path[0],'PASS_FTN.FOR'), 'REFPROP.pyf', python_exe = args.python_exe[0])
     dd = generate_function_dict('REFPROP.pyf')
 
     write_header(dd,'REFPROP.h')
