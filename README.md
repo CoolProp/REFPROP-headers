@@ -29,7 +29,7 @@ C) (default) Add definitions of the function pointers (for all the other files t
 Usage
 -----
 
-Please see the ``CMakeLists.txt`` cmake build system which includes examples of two files that both call into REFPROP.  Distribution of the ``REFPROP_lib.h`` file with your C++ code should be sufficient.
+Please see the ``CMakeLists.txt`` cmake build system which includes examples of two files that both call into REFPROP.  Distribution of the ``REFPROP_lib.h`` file with your C++ code should be sufficient.  There are two static variables that can be used for debugging purposes, ``std::string RPVersion_loaded`` and ``RPPath_loaded``.
 
 In order to build the cmake examples, do something like (in the root of code, next to ``CMakeLists.txt``):
 
@@ -38,7 +38,7 @@ In order to build the cmake examples, do something like (in the root of code, ne
     cmake ..
     cmake --build .
     
-which uses all default flags.  For more information, read the cmake docs.
+which uses all default flags.  For more information, read the cmake docs. 
 
 Testing
 -------
