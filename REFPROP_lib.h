@@ -664,7 +664,7 @@ extern "C" {
 
     bool unload_REFPROP(std::string &err)
     {
-        // If ASEREP is loaded
+        // If REFPROP is loaded
         if (RefpropdllInstance != NULL) {
 #if defined(__RPISWINDOWS__)
             std::stringstream msg_stream;
