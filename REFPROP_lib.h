@@ -691,6 +691,7 @@ extern "C" {
 #endif
             RefpropdllInstance = NULL;
             RPVersion_loaded.clear();
+            RPPath_loaded.clear();
         }
         return true;
     }
