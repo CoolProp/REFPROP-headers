@@ -153,7 +153,7 @@ if __name__=='__main__':
     parser = argparse.ArgumentParser(description='Run the generator for .')
     parser.add_argument('--FORTRAN-path', nargs=1, required =True, default="", help="The directory containing the FORTRAN source files")
     parser.add_argument('--keep-pyf', nargs='?', const=True, default=False, help="If defined, the intermediate pyf file will be kept, otherwise it will be deleted")
-    parser.add_argument('--python-exe', nargs=1, default="python", help="The python exe to be used to build the interface")
+    parser.add_argument('--python-exe', nargs=1, default=["python"], help="The python exe to be used to build the interface")
     args = parser.parse_args()
 
     # Change these paths as needed
