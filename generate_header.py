@@ -59,6 +59,16 @@ def find_subroutine(lines, lineno):
             intent_dimension = type[matches.start(0)::]
             type = type[0:matches.start(0)]
 
+        def get_dimension(intent_dimension):
+            nummatches = re.findall(r'dimension\(([0-9]*)\)', intent_dimension)
+            strmatches = re.findall(r'dimension\((\w*)\)', intent_dimension)
+            if nummatches:
+                return nummatches[0]
+            elif strmatches:
+                return strmatches[0]
+            else:
+                raise ValueError('Unable to match dimension in this line:', intent_dimension)
+
         if 'character' in type:
             # Example: "     character*10000 :: hfld"
             if type.strip() == 'character*(*)':
@@ -68,14 +78,14 @@ def find_subroutine(lines, lineno):
             string_arguments.append((argname.strip()+'_length', string_length))
             argument_list.append((argname.strip(), 'char *'))
         elif 'integer' in type:
-            L = 0
+            L = 0; 
             if 'dimension' in intent_dimension:
-                L = re.findall(r'dimension\(([0-9]*)\)', intent_dimension)[0]
+                L = get_dimension(intent_dimension)
             argument_list.append((argname.strip(), 'int *', L))
         elif 'double' in type:
-            L = 0
+            L = 0; 
             if 'dimension' in intent_dimension:
-                L = re.findall(r'dimension\(([0-9]*)\)', intent_dimension)[0]
+                L = get_dimension(intent_dimension)
             argument_list.append((argname.strip(), 'double *', L))
         else:
             raise ValueError(lines[istart + 1 + offset].strip())
