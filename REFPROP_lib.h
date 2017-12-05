@@ -67,12 +67,14 @@
     X(MELTTdll) \
     X(MLTH2Odll) \
     X(NAMEdll) \
+    X(PASSCMNdll) \
     X(PASSCMN) \
     X(PDFL1dll) \
     X(PDFLSHdll) \
     X(PEFLSHdll) \
     X(PHFL1dll) \
     X(PHFLSHdll) \
+    X(PHIDERVdll) \
     X(PHIXdll) \
     X(PHI0dll) \
     X(PQFLSHdll) \
@@ -86,6 +88,7 @@
     X(RESIDUALdll) \
     X(REDXdll) \
     X(RMIX2dll) \
+    X(RDXHMXdll) \
     X(SATDdll) \
     X(SATEdll) \
     X(SATGVdll) \
@@ -134,8 +137,6 @@ const static long errormessagelength = 255;
 const static long ncmax = 20;
 const static long numparams = 72;
 const static long maxcoefs = 50;
-const static long componentstringlength = 10000; // Length of component_string (see PASS_FTN.for from REFPROP)
-const static long versionstringlength = 1000; 
 
 // Get the platform identifiers, some overlap with "PlatformDetermination.h" from CoolProp's main repo 
 // See also http://stackoverflow.com/questions/5919996/how-to-detect-reliably-mac-os-x-ios-linux-windows-in-c-preprocessor
@@ -258,6 +259,7 @@ extern "C" {
     #define MLTH2Odll_ARGS DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
     #define NAMEdll_ARGS LONG_REF,char*,char*,char*,long ,long ,long 
     #define PASSCMN_ARGS char *,LONG_REF,LONG_REF,LONG_REF,char *,LONG_REF,DOUBLE_REF, double *, LONG_REF, char*, long, long, long
+    #define PASSCMNdll_ARGS char *,LONG_REF,LONG_REF,LONG_REF,char *,LONG_REF,DOUBLE_REF, double *, LONG_REF, char*, long, long, long
     // OMEGA
     #define PDFL1dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,LONG_REF,char*,long 
     #define PDFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
@@ -265,6 +267,7 @@ extern "C" {
     #define PEFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
     #define PHFL1dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,LONG_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
     #define PHFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
+    #define PHIDERVdll_ARGS LONG_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,double *,LONG_REF,char*,long
     #define PHI0dll_ARGS LONG_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,double *, DOUBLE_REF
     #define PHIXdll_ARGS LONG_REF,LONG_REF,DOUBLE_REF,DOUBLE_REF,double *, DOUBLE_REF
     #define PQFLSHdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,LONG_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
@@ -276,8 +279,8 @@ extern "C" {
     #define PUREFLDdll_ARGS LONG_REF
     #define QMASSdll_ARGS DOUBLE_REF,double *,double *,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
     #define QMOLEdll_ARGS DOUBLE_REF,double *,double *,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,LONG_REF,char*,long 
-    // RDXHMX
-    #define REDXdll_ARGS DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
+    #define RDXHMXdll_ARGS LONG_REF, LONG_REF,LONG_REF, double*, DOUBLE_REF,DOUBLE_REF, LONG_REF,char*,long 
+    #define REDXdll_ARGS double *,DOUBLE_REF,DOUBLE_REF
     #define RESIDUALdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
     // RIEM
     #define RMIX2dll_ARGS double *,DOUBLE_REF
@@ -455,24 +458,8 @@ extern "C" {
     const static std::string shared_lib_APPLE = "librefprop.dylib";
 
     static std::string RPVersion_loaded = "";
-    static std::string RPPath_loaded = "";
 
     enum DLLNameManglingStyle{ NO_NAME_MANGLING = 0, LOWERCASE_NAME_MANGLING, LOWERCASE_AND_UNDERSCORE_NAME_MANGLING };
-
-    const std::string& get_shared_lib()
-    {
-#if defined(__RPISWINDOWS__)
-        if (sizeof(void*) == 8) { // Assume 64bit
-            return shared_lib_WIN64;
-        } else {
-            return shared_lib_WIN32;
-        }
-#elif defined(__RPISLINUX__)
-        return shared_lib_LINUX;
-#elif defined(__RPISAPPLE__)
-        return shared_lib_APPLE;
-#endif
-    }
     
     inline std::string RPlower(std::string str)
     {
@@ -589,23 +576,27 @@ extern "C" {
         if (RefpropdllInstance == NULL)
         {
             // Load it
-            std::string msg;
-            std::string shared_lib;
-            if (shared_library_name.empty()) 
-            {
-                shared_lib = get_shared_lib();
-            } else {
-                shared_lib = shared_library_name;
-            }
             #if defined(__RPISWINDOWS__)
-                // Load the DLL
+                /* We need this logic on windows because if you use the bitness
+                 * macros it requires that the build bitness and the target bitness
+                 * are the same which is in general not the case.  Therefore, checking
+                 * both is safe
+                 */
                 TCHAR refpropdllstring[_MAX_PATH];
-                strcpy((char*)refpropdllstring, RP_join_path(shared_library_path, shared_lib).c_str());
-                RefpropdllInstance = LoadLibrary(refpropdllstring);
-                // Error handling
-                if (RefpropdllInstance == NULL)
-                {
-                    std::stringstream msg_stream;
+                if (shared_library_name.empty()) {
+                    strcpy((char*)refpropdllstring, RP_join_path(shared_library_path, shared_lib_WIN64).c_str());
+                    RefpropdllInstance = LoadLibrary(refpropdllstring);
+                    if (RefpropdllInstance == NULL) {
+                        strcpy((char*)refpropdllstring, RP_join_path(shared_library_path, shared_lib_WIN32).c_str());
+                        RefpropdllInstance = LoadLibrary(refpropdllstring);
+                    }
+                } else {
+                    strcpy((char*)refpropdllstring, RP_join_path(shared_library_path, shared_library_name).c_str());
+                    RefpropdllInstance = LoadLibrary(refpropdllstring);
+                }
+                std::stringstream msg_stream;
+                std::string msg;
+                if (RefpropdllInstance == NULL){
                     msg_stream << GetLastError(); // returns error
                     msg = msg_stream.str();
                 } else {
@@ -619,79 +610,46 @@ extern "C" {
                         std::wstring wStr = t;
                         msg = std::string(wStr.begin(), wStr.end());
                     #endif
-                    RPPath_loaded = msg;
                 }
-            #elif ( defined(__RPISLINUX__) || defined(__RPISAPPLE__) )
-                // Load library
-                RefpropdllInstance = dlopen (RP_join_path(shared_library_path, shared_lib).c_str(), RTLD_NOW); 
-                // Error handling
-                if (RefpropdllInstance == NULL) 
-                {
-                    char *errstr = NULL;
-                    errstr = dlerror();
-                    if (errstr != NULL) 
-                    {
-                        msg = errstr;
-                    }
+            #elif defined(__RPISLINUX__)
+                if (shared_library_name.empty()) {
+                    RefpropdllInstance = dlopen (RP_join_path(shared_library_path, shared_lib_LINUX).c_str(), RTLD_NOW);
                 } else {
-                    RPPath_loaded = RP_join_path(shared_library_path, shared_lib);
+                    RefpropdllInstance = dlopen (RP_join_path(shared_library_path, shared_library_name).c_str(), RTLD_NOW);
+                }                
+            #elif defined(__RPISAPPLE__)
+                if (shared_library_name.empty()) {
+                    RefpropdllInstance = dlopen (RP_join_path(shared_library_path, shared_lib_APPLE).c_str(), RTLD_NOW);
+                } else {
+                    RefpropdllInstance = dlopen (RP_join_path(shared_library_path, shared_library_name).c_str(), RTLD_NOW);
                 }
             #else
                 RefpropdllInstance = NULL;
-                RPPath_loaded = "";
-                msg = "Something is wrong with the platform definition, you should not end up here.";
             #endif
 
             if (RefpropdllInstance == NULL)
             {
-                err = "Could not load REFPROP (" + shared_lib + ") due to: " + msg + ". ";
-                err.append("Make sure the library is in your system search path. ");
-                err.append("In case you run 64bit Windows and you have a REFPROP license, try installing the 64bit DLL from NIST. ");
+                #if defined(__RPISWINDOWS__)
+                    err = "Could not load REFPROP ("+shared_lib_WIN64+", "+shared_lib_WIN32+") due to error "+ msg +", make sure it is in your system search path. In case you run 64bit and you have a REFPROP license, try installing the 64bit DLL from NIST.";
+                #elif defined(__RPISLINUX__)
+                    err = "Could not load REFPROP ("+shared_lib_LINUX+"), make sure it is in your system search path.";
+                #elif defined(__RPISAPPLE__)
+                    err = "Could not load REFPROP ("+shared_lib_APPLE+"), make sure it is in your system search path.";
+                #else
+                    err = "Something is wrong with the platform definition, you should not end up here.";
+                #endif
                 return false;
             }
+            std::string err;
             if (setFunctionPointers(err) != true)
             {
                 err = "There was an error setting the REFPROP function pointers, check types and names in header file.";
                 return false;
             }
-            char rpv[versionstringlength] = { '\0' };
-            RPVersion(rpv, versionstringlength);
+            char rpv[1000];
+            RPVersion(rpv, 1000);
             RPVersion_loaded = rpv;
             return true;
-        }
-        return true;
-    }
-
-    bool unload_REFPROP(std::string &err)
-    {
-        // If REFPROP is loaded
-        if (RefpropdllInstance != NULL) {
-#if defined(__RPISWINDOWS__)
-            std::stringstream msg_stream;
-            if (!FreeLibrary(RefpropdllInstance)) 
-            {
-                msg_stream << GetLastError(); // returns error
-                err = msg_stream.str();
-                return false;
-            }
-#elif (defined(__RPISLINUX__) || defined(__RPISAPPLE__))
-            if (dlclose(RefpropdllInstance) != 0) 
-            {
-                char *errstr = NULL;
-                errstr = dlerror();
-                if (errstr != NULL) 
-                {
-                    err = errstr;
-                }
-                return false;
-            }
-#else
-            err = "Something is wrong with the platform definition, you should not end up here.";
-            return false;
-#endif
-            RefpropdllInstance = NULL;
-            RPVersion_loaded.clear();
-            RPPath_loaded.clear();
         }
         return true;
     }
