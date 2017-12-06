@@ -137,6 +137,8 @@ const static long errormessagelength = 255;
 const static long ncmax = 20;
 const static long numparams = 72;
 const static long maxcoefs = 50;
+const static long componentstringlength = 10000; // Length of component_string (see PASS_FTN.for from REFPROP)
+const static long versionstringlength = 1000; 
 
 // Get the platform identifiers, some overlap with "PlatformDetermination.h" from CoolProp's main repo 
 // See also http://stackoverflow.com/questions/5919996/how-to-detect-reliably-mac-os-x-ios-linux-windows-in-c-preprocessor
@@ -458,8 +460,24 @@ extern "C" {
     const static std::string shared_lib_APPLE = "librefprop.dylib";
 
     static std::string RPVersion_loaded = "";
+    static std::string RPPath_loaded = "";
 
     enum DLLNameManglingStyle{ NO_NAME_MANGLING = 0, LOWERCASE_NAME_MANGLING, LOWERCASE_AND_UNDERSCORE_NAME_MANGLING };
+
+    const std::string& get_shared_lib()
+    {
+#if defined(__RPISWINDOWS__)
+        if (sizeof(void*) == 8) { // Assume 64bit
+            return shared_lib_WIN64;
+        } else {
+            return shared_lib_WIN32;
+        }
+#elif defined(__RPISLINUX__)
+        return shared_lib_LINUX;
+#elif defined(__RPISAPPLE__)
+        return shared_lib_APPLE;
+#endif
+    }
     
     inline std::string RPlower(std::string str)
     {
@@ -576,27 +594,23 @@ extern "C" {
         if (RefpropdllInstance == NULL)
         {
             // Load it
+            std::string msg;
+            std::string shared_lib;
+            if (shared_library_name.empty()) 
+            {
+                shared_lib = get_shared_lib();
+            } else {
+                shared_lib = shared_library_name;
+            }
             #if defined(__RPISWINDOWS__)
-                /* We need this logic on windows because if you use the bitness
-                 * macros it requires that the build bitness and the target bitness
-                 * are the same which is in general not the case.  Therefore, checking
-                 * both is safe
-                 */
+                // Load the DLL
                 TCHAR refpropdllstring[_MAX_PATH];
-                if (shared_library_name.empty()) {
-                    strcpy((char*)refpropdllstring, RP_join_path(shared_library_path, shared_lib_WIN64).c_str());
-                    RefpropdllInstance = LoadLibrary(refpropdllstring);
-                    if (RefpropdllInstance == NULL) {
-                        strcpy((char*)refpropdllstring, RP_join_path(shared_library_path, shared_lib_WIN32).c_str());
-                        RefpropdllInstance = LoadLibrary(refpropdllstring);
-                    }
-                } else {
-                    strcpy((char*)refpropdllstring, RP_join_path(shared_library_path, shared_library_name).c_str());
-                    RefpropdllInstance = LoadLibrary(refpropdllstring);
-                }
-                std::stringstream msg_stream;
-                std::string msg;
-                if (RefpropdllInstance == NULL){
+                strcpy((char*)refpropdllstring, RP_join_path(shared_library_path, shared_lib).c_str());
+                RefpropdllInstance = LoadLibrary(refpropdllstring);
+                // Error handling
+                if (RefpropdllInstance == NULL)
+                {
+                    std::stringstream msg_stream;
                     msg_stream << GetLastError(); // returns error
                     msg = msg_stream.str();
                 } else {
@@ -610,46 +624,79 @@ extern "C" {
                         std::wstring wStr = t;
                         msg = std::string(wStr.begin(), wStr.end());
                     #endif
+                    RPPath_loaded = msg;
                 }
-            #elif defined(__RPISLINUX__)
-                if (shared_library_name.empty()) {
-                    RefpropdllInstance = dlopen (RP_join_path(shared_library_path, shared_lib_LINUX).c_str(), RTLD_NOW);
+            #elif ( defined(__RPISLINUX__) || defined(__RPISAPPLE__) )
+                // Load library
+                RefpropdllInstance = dlopen (RP_join_path(shared_library_path, shared_lib).c_str(), RTLD_NOW); 
+                // Error handling
+                if (RefpropdllInstance == NULL) 
+                {
+                    char *errstr = NULL;
+                    errstr = dlerror();
+                    if (errstr != NULL) 
+                    {
+                        msg = errstr;
+                    }
                 } else {
-                    RefpropdllInstance = dlopen (RP_join_path(shared_library_path, shared_library_name).c_str(), RTLD_NOW);
-                }                
-            #elif defined(__RPISAPPLE__)
-                if (shared_library_name.empty()) {
-                    RefpropdllInstance = dlopen (RP_join_path(shared_library_path, shared_lib_APPLE).c_str(), RTLD_NOW);
-                } else {
-                    RefpropdllInstance = dlopen (RP_join_path(shared_library_path, shared_library_name).c_str(), RTLD_NOW);
+                    RPPath_loaded = RP_join_path(shared_library_path, shared_lib);
                 }
             #else
                 RefpropdllInstance = NULL;
+                RPPath_loaded = "";
+                msg = "Something is wrong with the platform definition, you should not end up here.";
             #endif
 
             if (RefpropdllInstance == NULL)
             {
-                #if defined(__RPISWINDOWS__)
-                    err = "Could not load REFPROP ("+shared_lib_WIN64+", "+shared_lib_WIN32+") due to error "+ msg +", make sure it is in your system search path. In case you run 64bit and you have a REFPROP license, try installing the 64bit DLL from NIST.";
-                #elif defined(__RPISLINUX__)
-                    err = "Could not load REFPROP ("+shared_lib_LINUX+"), make sure it is in your system search path.";
-                #elif defined(__RPISAPPLE__)
-                    err = "Could not load REFPROP ("+shared_lib_APPLE+"), make sure it is in your system search path.";
-                #else
-                    err = "Something is wrong with the platform definition, you should not end up here.";
-                #endif
+                err = "Could not load REFPROP (" + shared_lib + ") due to: " + msg + ". ";
+                err.append("Make sure the library is in your system search path. ");
+                err.append("In case you run 64bit Windows and you have a REFPROP license, try installing the 64bit DLL from NIST. ");
                 return false;
             }
-            std::string err;
             if (setFunctionPointers(err) != true)
             {
                 err = "There was an error setting the REFPROP function pointers, check types and names in header file.";
                 return false;
             }
-            char rpv[1000];
-            RPVersion(rpv, 1000);
+            char rpv[versionstringlength] = { '\0' };
+            RPVersion(rpv, versionstringlength);
             RPVersion_loaded = rpv;
             return true;
+        }
+        return true;
+    }
+
+    bool unload_REFPROP(std::string &err)
+    {
+        // If REFPROP is loaded
+        if (RefpropdllInstance != NULL) {
+#if defined(__RPISWINDOWS__)
+            std::stringstream msg_stream;
+            if (!FreeLibrary(RefpropdllInstance)) 
+            {
+                msg_stream << GetLastError(); // returns error
+                err = msg_stream.str();
+                return false;
+            }
+#elif (defined(__RPISLINUX__) || defined(__RPISAPPLE__))
+            if (dlclose(RefpropdllInstance) != 0) 
+            {
+                char *errstr = NULL;
+                errstr = dlerror();
+                if (errstr != NULL) 
+                {
+                    err = errstr;
+                }
+                return false;
+            }
+#else
+            err = "Something is wrong with the platform definition, you should not end up here.";
+            return false;
+#endif
+            RefpropdllInstance = NULL;
+            RPVersion_loaded.clear();
+            RPPath_loaded.clear();
         }
         return true;
     }
