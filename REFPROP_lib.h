@@ -162,6 +162,12 @@ const static long versionstringlength = 1000;
 #    define RPCALLCONV
 #endif
 
+// By default the functions are defined to be static and not visible to other compilation units
+// You could for instance set this macro to "" which would make the symbols available
+#ifndef REFPROP_FUNCTION_MODIFIER
+#define REFPROP_FUNCTION_MODIFIER static
+#endif
+
 // define new macros for function names
 // http://stackoverflow.com/questions/195975/how-to-make-a-char-string-from-a-c-macros-value
 #define STR_VALUE(arg)      #arg
@@ -377,8 +383,8 @@ extern "C" {
         #ifdef REFPROP_IMPLEMENTATION
             // Here we want to define them to be used in this file only
             // since we are adding all the accessor functions
-            // Defined as static to ensure they are only in this file
-            #define X(name) static name ## _POINTER name;
+            // Defined as static (by default, but see above) to ensure they are only in this file
+            #define X(name) REFPROP_FUNCTION_MODIFIER name ## _POINTER name;
                 LIST_OF_REFPROP_FUNCTION_NAMES
             #undef X
         #else
