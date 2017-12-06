@@ -1,6 +1,8 @@
 
 #define REFPROP_IMPLEMENTATION
+#define REFPROP_FUNCTION_MODIFIER
 #include "REFPROP_lib.h"
+#undef REFPROP_FUNCTION_MODIFIER
 #undef REFPROP_IMPLEMENTATION
 #include <stdlib.h>
 #include <stdio.h>
@@ -10,15 +12,16 @@ void another_file(void);
 
 int main()
 {
+
     // Load the shared library
     std::string err;
-    bool loaded_REFPROP = load_REFPROP(err);
+    bool loaded_REFPROP = load_REFPROP(err, "D:/Code/PhiFit/_private/veric", "REFPRP64.DLL");
  
-    char mypath[] = "/opt/refprop/";
+    char mypath[] = "D:/Code/PhiFit/_private/veric";
     SETPATHdll(mypath, 400);
 
     long ierr = 0, nc = 1;
-    char herr[255], hfld[] = "WATER.FLD", hhmx[] = "HMX.BNC", href[] = "DEF";
+    char herr[255], hfld[] = "AMMONIA|WATER", hhmx[] = "HMX.BNC", href[] = "DEF";
     SETUPdll(nc,hfld,hhmx,href,ierr,herr,10000,255,3,255);
     if (ierr > 0) printf("This ierr: %ld herr: %s\n", ierr, herr);
     {
@@ -28,6 +31,14 @@ int main()
         TPFLSHdll(T, p, z, d, dl, dv, x, y, h,s,u,cp,cv,w,q,ierr,herr,255);
         if (ierr > 0) printf("This ierr: %ld herr: %s\n", ierr, herr);
         printf("This d: %g mol/L\n", d);
+        {
+            double T = 293.15; double z[20] = { 0.20209999999999995, 0.7979}; long kph = 1;
+            double P, rhol, rhov;
+            double x[20], y[20];
+            long ierr; char herr[255];
+            SATTdll(T, z, kph, P, rhol, rhov, x, y, ierr, herr, 255);
+            printf("This p: %g mol/L\n", p);
+        }
     }
 
     // Call a function in another file

@@ -8,6 +8,76 @@
 // the compiled .so file. Name changes caused by gfortran 
 // are respected and should be accounted for. 
 
+// Get the platform identifiers, some overlap with "PlatformDetermination.h" from CoolProp's main repo 
+// See also http://stackoverflow.com/questions/5919996/how-to-detect-reliably-mac-os-x-ios-linux-windows-in-c-preprocessor
+#if defined(_WIN32) || defined(__WIN32__) || defined(_WIN64) || defined(__WIN64__)
+#    define __RPISWINDOWS__
+#elif defined(__APPLE__)
+#    define __RPISAPPLE__
+#elif defined(__linux) || defined(__unix) || defined(__posix)
+#    define __RPISLINUX__
+#elif defined(__powerpc__)
+#    define __RPISPOWERPC__
+#else
+#    pragma error
+#endif
+
+// Define compiler specific calling conventions
+// for the shared library.
+#if defined(__RPISWINDOWS__)
+#    define RPCALLCONV __stdcall
+#else
+#    define RPCALLCONV
+#endif
+
+// ******************************************
+// ******************************************
+// Headers (platform specific and otherwise)
+// ******************************************
+// ******************************************
+
+#ifdef REFPROP_IMPLEMENTATION
+
+    #ifndef __cplusplus
+    #error REFPROP_IMPLEMENTATION can only be used in C++
+    #endif
+
+    #if defined(__powerpc__)
+        #include <cstring>
+    #elif defined(__RPISLINUX__) || defined(__RPISAPPLE__)
+        #include <cstring>
+        #include <dlfcn.h>
+    #elif defined(__RPISWINDOWS__)
+
+        #if defined(_MSC_VER)
+        #ifndef _CRT_SECURE_NO_WARNINGS
+        #define _CRT_SECURE_NO_WARNINGS
+        #endif
+        #endif
+
+        #ifndef NOMINMAX
+            #define NOMINMAX
+            #include <windows.h>
+            #undef NOMINMAX
+        #else 
+            #include <windows.h>
+        #endif
+
+        #if defined(_MSC_VER)
+        #undef _CRT_SECURE_NO_WARNINGS
+        #endif
+
+        
+    #else
+        #pragma error
+    #endif
+
+    #include <sstream>
+    #include <string>
+    #include <algorithm>
+
+#endif
+
 /* See http://stackoverflow.com/a/148610
  * See http://stackoverflow.com/questions/147267/easy-way-to-use-variables-of-enum-types-as-string-in-c#202511
  * This will be used to generate function names, pointers, etc. below
@@ -139,28 +209,6 @@ const static long numparams = 72;
 const static long maxcoefs = 50;
 const static long componentstringlength = 10000; // Length of component_string (see PASS_FTN.for from REFPROP)
 const static long versionstringlength = 1000; 
-
-// Get the platform identifiers, some overlap with "PlatformDetermination.h" from CoolProp's main repo 
-// See also http://stackoverflow.com/questions/5919996/how-to-detect-reliably-mac-os-x-ios-linux-windows-in-c-preprocessor
-#if defined(_WIN32) || defined(__WIN32__) || defined(_WIN64) || defined(__WIN64__)
-#    define __RPISWINDOWS__
-#elif defined(__APPLE__)
-#    define __RPISAPPLE__
-#elif defined(__linux) || defined(__unix) || defined(__posix)
-#    define __RPISLINUX__
-#elif defined(__powerpc__)
-#    define __RPISPOWERPC__
-#else
-#    pragma error
-#endif
-
-// Define compiler specific calling conventions
-// for the shared library.
-#if defined(__RPISWINDOWS__)
-#    define RPCALLCONV __stdcall
-#else
-#    define RPCALLCONV
-#endif
 
 // By default the functions are defined to be static and not visible to other compilation units
 // You could for instance set this macro to "" which would make the symbols available
@@ -420,45 +468,15 @@ extern "C" {
 // N.B. This is C++-only, though with some work it could be made C compatible
 #ifdef REFPROP_IMPLEMENTATION
 
-    #ifndef __cplusplus
-    #error REFPROP_IMPLEMENTATION can only be used in C++
-    #endif
-
     #if defined(__powerpc__)
-        #include <cstring>
         static void *RefpropdllInstance=NULL;
     #elif defined(__RPISLINUX__) || defined(__RPISAPPLE__)
-        #include <cstring>
-        #include <dlfcn.h>
         static void *RefpropdllInstance=NULL;
     #elif defined(__RPISWINDOWS__)
-
-        #if defined(_MSC_VER)
-        #ifndef _CRT_SECURE_NO_WARNINGS
-        #define _CRT_SECURE_NO_WARNINGS
-        #endif
-        #endif
-
-        #ifndef NOMINMAX
-            #define NOMINMAX
-            #include <windows.h>
-            #undef NOMINMAX
-        #else 
-            #include <windows.h>
-        #endif
-
-        #if defined(_MSC_VER)
-        #undef _CRT_SECURE_NO_WARNINGS
-        #endif
-
         static HINSTANCE RefpropdllInstance=NULL;
     #else
         #pragma error
     #endif
-
-    #include <sstream>
-    #include <string>
-    #include <algorithm>
 
     // Define the default library names
     const static std::string shared_lib_WIN64 = "REFPRP64.dll";
