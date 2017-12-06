@@ -234,6 +234,10 @@ const static long versionstringlength = 1000;
     #define LONG_REF long &
 #endif
 
+#ifdef REFPROP_LIB_NAMESPACE
+namespace REFPROP_LIB_NAMESPACE {
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -727,5 +731,9 @@ extern "C" {
     }
 
 #endif // REFPROP_IMPLEMENTATION
+
+#ifdef REFPROP_LIB_NAMESPACE
+}; /* namespace REFPROP_LIB_NAMESPACE */
+#endif
 
 #endif // REFPROP_LIB_H
