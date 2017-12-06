@@ -377,7 +377,8 @@ extern "C" {
         #ifdef REFPROP_IMPLEMENTATION
             // Here we want to define them to be used in this file only
             // since we are adding all the accessor functions
-            #define X(name)  name ## _POINTER name;
+            // Defined as static to ensure they are only in this file
+            #define X(name) static name ## _POINTER name;
                 LIST_OF_REFPROP_FUNCTION_NAMES
             #undef X
         #else
