@@ -235,6 +235,7 @@ const static int versionstringlength = 1000;
 #endif
 
 // We must determine the size of std::size_t because that is the variable type that should be used to define the string lengths
+// See also https://software.intel.com/en-us/articles/passing-character-string-in-intel-64-mixed-fortranc-project
 #if !defined(__cplusplus)
     #if !defined(SIZE_T_TYPE)
     #error The preprocessor macro SIZE_T_TYPE must be defined and give the unsigned integer variable type that is the same size (in bytes) as std::size_t

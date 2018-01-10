@@ -48,3 +48,29 @@ The steps described above are also carried out by our test server running on Tra
  - Travis CI build status: [![Travis Status](https://travis-ci.org/CoolProp/REFPROP-headers.svg?branch=master)](https://travis-ci.org/CoolProp/REFPROP-headers)
  - Coverity Scan status: [![Coverity Status](https://scan.coverity.com/projects/12519/badge.svg)](https://scan.coverity.com/projects/coolprop-refprop-headers)
  
+
+Notes on integers
+-----------------
+
+The handling of integer types in mixed language compilation (C/FORTRAN) is a bit complicated.  Thanks to the work of Chris Muzny at NIST, it has been determined that the proper approach to dealing with integers between FORTRAN and C/C++ is to use the ``int`` type always.
+
+On all platforms, the ``INTEGER`` type in FORTRAN is by default 4 bytes.  You can write a small program that demonstrates this if you are unsure:
+
+``` fortran
+PROGRAM SIZE_TEST
+  INTEGER I1
+  print *,"Size of INTEGER: ",sizeof(I1)
+```
+
+Similarly, you can demonstrate that the int type is 4 bytes on all platforms and bitnesses (32-bit/64-bit):
+
+``` c++
+#include <iostream>
+using namespace std;
+int main() 
+{    
+   cout << "Size of int: " << sizeof(int) << " bytes" << endl;
+   return 0;
+}
+```
+Therefore, you can conclude that the "integer" type that will satisfy FORTRAN and C is the ``int`` type.
