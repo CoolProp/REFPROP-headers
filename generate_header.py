@@ -122,16 +122,17 @@ def generate_function_dict(pyf_file_path):
     """
     Returns JSON data structure for the functions
     """
-    istart = 0
     with open(pyf_file_path, 'r') as fp:
         lines = fp.readlines()
         funcs = {}
-        output = find_subroutine(lines, istart)
+        output = True 
+        istart = 0
         while output is not None:
-            output = find_subroutine(lines, output['iend']+1)
+            output = find_subroutine(lines, istart)
             if output is not None:
                 funcname = correct_name_case(output['name'])
                 funcs[funcname] = output
+                istart = output['iend']+1
     return funcs
 
 header = """
@@ -156,7 +157,7 @@ def write_header(function_dict, output_header_file):
     
 if __name__=='__main__':
     # Uncomment for local testing
-    # sys.argv += ['--FORTRAN-path', r'/Users/ihb/Downloads/911FILES']
+    # sys.argv += ['--FORTRAN-path', r'R:/FORTRAN','--keep-pyf']
 
     # Parse args first
     import argparse
