@@ -97,6 +97,7 @@
     X(CV2PKdll) \
     X(CVCPKdll) \
     X(CVCPdll) \
+    X(CRTPNTdll) \
     X(DBDTdll) \
     X(DBFL1dll) \
     X(DBFL2dll) \
@@ -267,6 +268,7 @@ extern "C" {
     #define CHEMPOTdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,double *, INT_REF,char*,SIZE_T 
     #define CP0dll_ARGS DOUBLE_REF, double *, DOUBLE_REF
     #define CRITPdll_ARGS double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,INT_REF,char*,SIZE_T 
+    #define CRTPNTdll_ARGS double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,INT_REF,char*,SIZE_T 
     #define CSATKdll_ARGS INT_REF,DOUBLE_REF,INT_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,INT_REF,char*,SIZE_T 
     // Cstar
     #define CV2PKdll_ARGS INT_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,INT_REF,char*,SIZE_T 
