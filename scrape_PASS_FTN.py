@@ -1,5 +1,5 @@
 """
-A script to scrape all the function exports from the PASS_CMN.FOR
+A script to scrape all the function exports from the PASS_FTN.FOR
 
 By Ian Bell, NIST, January 2018
 """
