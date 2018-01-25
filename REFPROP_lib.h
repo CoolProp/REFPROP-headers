@@ -137,6 +137,7 @@
     X(FUGCOFdll) \
     X(GERG04dll) \
     X(GERG08dll) \
+    X(GETENUMdll) \    
     X(GETFIJdll) \
     X(GETKTVdll) \
     X(GETMODdll) \
@@ -362,6 +363,7 @@ extern "C" {
     #define FUGCOFdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,double *,INT_REF,char *,SIZE_T
     #define GERG04dll_ARGS INT_REF,INT_REF,INT_REF,char *,SIZE_T
     #define GERG08dll_ARGS INT_REF,INT_REF,INT_REF,char *,SIZE_T
+    #define GETENUMdll_ARGS INT_REF,char *,INT_REF,INT_REF,char *,SIZE_T,SIZE_T
     #define GETFIJdll_ARGS char *,double *,char *,char *,SIZE_T,SIZE_T,SIZE_T
     #define GETKTVdll_ARGS INT_REF,INT_REF,char *,double *,char *,char *,char *,char *,SIZE_T,SIZE_T,SIZE_T,SIZE_T,SIZE_T
     #define GETMODdll_ARGS INT_REF,char *,char *,char *,SIZE_T,SIZE_T,SIZE_T
