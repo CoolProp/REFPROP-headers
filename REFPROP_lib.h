@@ -137,7 +137,7 @@
     X(FUGCOFdll) \
     X(GERG04dll) \
     X(GERG08dll) \
-    X(GETENUMdll) \    
+    X(GETENUMdll) \
     X(GETFIJdll) \
     X(GETKTVdll) \
     X(GETMODdll) \
