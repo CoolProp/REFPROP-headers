@@ -477,6 +477,8 @@ extern "C" {
     #define XMASSdll_ARGS double *,double *,DOUBLE_REF
     #define XMOLEdll_ARGS double *,double *,DOUBLE_REF
 
+#if !defined(REFPROP_ONLY_MACROS)
+
     #if !defined(REFPROP_PROTOTYPES)
     
         // ***MAGIC WARNING**!! X Macros in use
@@ -531,6 +533,8 @@ extern "C" {
             LIST_OF_REFPROP_FUNCTION_NAMES
         #undef X
     #endif
+
+#endif  // (REFPROP_ONLY_MACROS)
 
 #ifdef __cplusplus
 } // extern "C"
