@@ -31,7 +31,7 @@ if __name__=='__main__':
                 types.append('int *')
             elif _type == 'char *':
                 types.append('char *')
-                string_lengths.append('SIZE_T')
+                string_lengths.append('RP_SIZE_T')
             else: 
                 print(types)
                 raise ValueError()
