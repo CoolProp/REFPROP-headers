@@ -86,11 +86,11 @@
     X(ABFL1dll) \
     X(ABFL2dll) \
     X(ABFLSHdll) \
-    X(ACTVYdll) \
     X(AGdll) \
-    X(ALLPROP1dll) \
+    X(ALLPROPS0dll) \
+    X(ALLPROPS1dll) \
+    X(ALLPROPS20dll) \
     X(ALLPROPSdll) \
-    X(ALLPRP200dll) \
     X(B12dll) \
     X(BLCRVdll) \
     X(CCRITdll) \
@@ -141,6 +141,7 @@
     X(GETFIJdll) \
     X(GETKTVdll) \
     X(GETMODdll) \
+    X(GETREFDIRdll) \
     X(GIBBSdll) \
     X(HEATFRMdll) \
     X(HEATdll) \
@@ -213,6 +214,7 @@
     X(SETMODdll) \
     X(SETNCdll) \
     X(SETPATHdll) \
+    X(SETREFDIRdll) \
     X(SETREFdll) \
     X(SETUPdll) \
     X(SPLNROOTdll) \
@@ -312,11 +314,11 @@ extern "C" {
     #define ABFL1dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,INT_REF,char *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,INT_REF,char *,RP_SIZE_T,RP_SIZE_T
     #define ABFL2dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,INT_REF,INT_REF,char *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,INT_REF,char *,RP_SIZE_T,RP_SIZE_T
     #define ABFLSHdll_ARGS char *,DOUBLE_REF,DOUBLE_REF,double *,INT_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,INT_REF,char *,RP_SIZE_T,RP_SIZE_T
-    #define ACTVYdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,double *,double *,INT_REF,char *,RP_SIZE_T
     #define AGdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF
-    #define ALLPROP1dll_ARGS char *,INT_REF,DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,INT_REF,char *,RP_SIZE_T,RP_SIZE_T
+    #define ALLPROPS0dll_ARGS INT_REF,int *,INT_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,INT_REF,char *,RP_SIZE_T
+    #define ALLPROPS1dll_ARGS char *,INT_REF,DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,INT_REF,char *,RP_SIZE_T,RP_SIZE_T
+    #define ALLPROPS20dll_ARGS char *,INT_REF,INT_REF,INT_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,char *,int *,INT_REF,char *,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T
     #define ALLPROPSdll_ARGS char *,INT_REF,INT_REF,INT_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,char *,int *,INT_REF,char *,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T
-    #define ALLPRP200dll_ARGS char *,INT_REF,INT_REF,INT_REF,DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,char *,int *,INT_REF,char *,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T
     #define B12dll_ARGS DOUBLE_REF,double *,DOUBLE_REF
     #define BLCRVdll_ARGS DOUBLE_REF,double *,DOUBLE_REF,INT_REF,char *,RP_SIZE_T
     #define CCRITdll_ARGS DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,INT_REF,char *,RP_SIZE_T
@@ -367,6 +369,7 @@ extern "C" {
     #define GETFIJdll_ARGS char *,double *,char *,char *,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T
     #define GETKTVdll_ARGS INT_REF,INT_REF,char *,double *,char *,char *,char *,char *,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T
     #define GETMODdll_ARGS INT_REF,char *,char *,char *,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T
+    #define GETREFDIRdll_ARGS char *,RP_SIZE_T
     #define GIBBSdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF
     #define HEATFRMdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,INT_REF,char *,RP_SIZE_T
     #define HEATdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,INT_REF,char *,RP_SIZE_T
@@ -412,7 +415,7 @@ extern "C" {
     #define QMOLEdll_ARGS DOUBLE_REF,double *,double *,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,INT_REF,char *,RP_SIZE_T
     #define RDXHMXdll_ARGS INT_REF,INT_REF,INT_REF,double *,DOUBLE_REF,DOUBLE_REF,INT_REF,char *,RP_SIZE_T
     #define REDXdll_ARGS double *,DOUBLE_REF,DOUBLE_REF
-    #define REFPROP1dll_ARGS char *,char *,INT_REF,DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,INT_REF,char *,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T
+    #define REFPROP1dll_ARGS char *,char *,INT_REF,INT_REF,DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,INT_REF,char *,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T
     #define REFPROPdll_ARGS char *,char *,char *,INT_REF,INT_REF,INT_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,char *,INT_REF,double *,double *,double *,DOUBLE_REF,INT_REF,char *,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T
     #define RESIDUALdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
     #define RIEMdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF
@@ -439,6 +442,7 @@ extern "C" {
     #define SETMODdll_ARGS INT_REF,char *,char *,char *,INT_REF,char *,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T
     #define SETNCdll_ARGS INT_REF
     #define SETPATHdll_ARGS char *,RP_SIZE_T
+    #define SETREFDIRdll_ARGS char *,RP_SIZE_T
     #define SETREFdll_ARGS char *,INT_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,INT_REF,char *,RP_SIZE_T,RP_SIZE_T
     #define SETUPdll_ARGS INT_REF,char *,char *,char *,INT_REF,char *,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T
     #define SPLNROOTdll_ARGS INT_REF,INT_REF,DOUBLE_REF,DOUBLE_REF,INT_REF,char *,RP_SIZE_T
