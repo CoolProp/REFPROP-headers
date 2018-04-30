@@ -252,17 +252,6 @@
     X(WMOLdll) \
     X(XMASSdll) \
     X(XMOLEdll)
-    
-// Some constants for REFPROP...
-const static int refpropcharlength = 255;
-const static int filepathlength = 255;
-const static int lengthofreference = 3;
-const static int errormessagelength = 255;
-const static int ncmax = 20;
-const static int numparams = 72;
-const static int maxcoefs = 50;
-const static int componentstringlength = 10000; // Length of component_string (see PASS_FTN.for from REFPROP)
-const static int versionstringlength = 1000; 
 
 // By default the functions are defined to be static and not visible to other compilation units
 // You could for instance set this macro to "" which would make the symbols available
@@ -300,6 +289,16 @@ const static int versionstringlength = 1000;
     #define RP_SIZE_T std::size_t
 #endif
 
+// Some string length constants for REFPROP...
+const static RP_SIZE_T refpropcharlength = 255;
+const static RP_SIZE_T filepathlength = 255;
+const static RP_SIZE_T lengthofreference = 3;
+const static RP_SIZE_T errormessagelength = 255;
+const static RP_SIZE_T ncmax = 20;
+const static RP_SIZE_T numparams = 72;
+const static RP_SIZE_T maxcoefs = 50;
+const static RP_SIZE_T componentstringlength = 10000; // Length of component_string (see PASS_FTN.for from REFPROP)
+const static RP_SIZE_T versionstringlength = 1000; 
 
 #ifdef REFPROP_LIB_NAMESPACE
 namespace REFPROP_LIB_NAMESPACE {
