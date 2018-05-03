@@ -13,9 +13,13 @@ void another_file(void);
 int main()
 {
 
+    // Call a function in another file (and load the DLL, and then unload it)
+    another_file();
+
     // Load the shared library
     std::string err;
     bool loaded_REFPROP = load_REFPROP(err, "D:/Code/PhiFit/_private/veric", "REFPRP64.DLL");
+    printf("Loaded refprop (in main.cpp): %s @ address %zu\n", loaded_REFPROP ? "true" : "false", REFPROP_address());
  
     char mypath[] = "D:/Code/PhiFit/_private/veric";
     SETPATHdll(mypath, 400);
@@ -41,7 +45,7 @@ int main()
         }
     }
 
-    // Call a function in another file
+    // Call a function in another file (and load the DLL, and then unload it)
     another_file();
 
     return EXIT_SUCCESS;

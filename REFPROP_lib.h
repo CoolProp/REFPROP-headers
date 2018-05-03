@@ -30,6 +30,14 @@
 #    define RPCALLCONV
 #endif
 
+// Function prototypes that are implemented below when REFPROP_IMPLEMENTATION macro is defined
+// before this header is included.  REFPROP_IMPLEMENTATION shall be implemented in ONLY ONE
+// compilation unit
+#include <string>
+bool load_REFPROP(std::string &err, const std::string &shared_library_path = "", const std::string &shared_library_name = "");
+bool unload_REFPROP(std::string &err);
+std::size_t REFPROP_address();
+
 // ******************************************
 // ******************************************
 // Headers (platform specific and otherwise)
@@ -701,7 +709,7 @@ extern "C" {
         return result;
     }
 
-    bool load_REFPROP(std::string &err, const std::string &shared_library_path = "", const std::string &shared_library_name = "")
+    bool load_REFPROP(std::string &err, const std::string &shared_library_path, const std::string &shared_library_name)
     {
         // If REFPROP is not loaded
         if (RefpropdllInstance == NULL)
@@ -812,6 +820,10 @@ extern "C" {
             RPPath_loaded.clear();
         }
         return true;
+    }
+
+    std::size_t REFPROP_address() {
+        return reinterpret_cast<std::size_t>(RefpropdllInstance);
     }
 
 #endif // REFPROP_IMPLEMENTATION

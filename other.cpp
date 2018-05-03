@@ -5,6 +5,12 @@
 
 void another_file()
 {
+
+    // Load the shared library
+    std::string err;
+    bool loaded_REFPROP = load_REFPROP(err, "D:/Code/PhiFit/_private/veric", "REFPRP64.DLL");
+    printf("Loaded refprop (in other.cpp): %s @ address %zu\n", loaded_REFPROP ? "true" : "false", REFPROP_address());
+
     int ierr = 0, nc = 1;
     char herr[255], hfld[] = "R32.FLD", hhmx[] = "HMX.BNC", href[] = "DEF";
     SETUPdll(nc,hfld,hhmx,href,ierr,herr,10000,255,3,255);
@@ -17,4 +23,7 @@ void another_file()
         if (ierr > 0) printf("Other ierr: %ld herr: %s\n", ierr, herr);
         printf("Other d: %g mol/L\n", d);
     }
+
+    bool unloaded_REFPROP = unload_REFPROP(err);
+    printf("Unloaded refprop (in other.cpp): %s\n", loaded_REFPROP ? "true" : "false");
 }
