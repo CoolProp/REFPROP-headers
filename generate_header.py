@@ -9,7 +9,11 @@ def generate_interface_file(REFPROP_FORTRAN_path, interface_file_path, verbose =
     # Call f2py to generate .pyf file
     from subprocess import Popen, PIPE
     print('Writing the .pyf file with numpy.f2py, please be patient...')
-    p = Popen([python_exe,'-m','numpy.f2py','--quiet','--no-lower','-h',interface_file_path,REFPROP_FORTRAN_path], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    args = [python_exe,'-m','numpy.f2py','--quiet','--no-lower','-h',interface_file_path,REFPROP_FORTRAN_path]
+    # Force an overwrite if the PYF target is older than the PASS_FTN.FOR
+    if os.path.exists(interface_file_path) and os.path.getmtime(interface_file_path) < os.path.getmtime(REFPROP_FORTRAN_path):
+        args += '--overwrite-signature'
+    p = Popen(args, stdin=PIPE, stdout=PIPE, stderr=PIPE)
     output, err = p.communicate()
     rc = p.returncode
     # If the REFPROP.pyf file was not generated successfully, that's an error
