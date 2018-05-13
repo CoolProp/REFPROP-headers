@@ -197,6 +197,7 @@ std::size_t REFPROP_address();
     X(RDXHMXdll) \
     X(REDXdll) \
     X(REFPROP1dll) \
+    X(REFPROP2dll) \
     X(REFPROPdll) \
     X(RESIDUALdll) \
     X(RIEMdll) \
@@ -426,6 +427,7 @@ extern "C" {
     #define RDXHMXdll_ARGS INT_REF,INT_REF,INT_REF,double *,DOUBLE_REF,DOUBLE_REF,INT_REF,char *,RP_SIZE_T
     #define REDXdll_ARGS double *,DOUBLE_REF,DOUBLE_REF
     #define REFPROP1dll_ARGS char *,char *,INT_REF,INT_REF,DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,INT_REF,char *,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T
+    #define REFPROP2dll_ARGS char *,char *,char *,INT_REF,INT_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,INT_REF,char *,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T
     #define REFPROPdll_ARGS char *,char *,char *,INT_REF,INT_REF,INT_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,char *,INT_REF,double *,double *,double *,DOUBLE_REF,INT_REF,char *,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T
     #define RESIDUALdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
     #define RIEMdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF
