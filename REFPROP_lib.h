@@ -824,6 +824,7 @@ extern "C" {
         return true;
     }
 
+    /// The address of the REFPROP instance
     std::size_t REFPROP_address() {
         return reinterpret_cast<std::size_t>(RefpropdllInstance);
     }
