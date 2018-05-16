@@ -1,9 +1,11 @@
 
+// Only this file gets the implementation
 #define REFPROP_IMPLEMENTATION
 #define REFPROP_FUNCTION_MODIFIER
 #include "REFPROP_lib.h"
 #undef REFPROP_FUNCTION_MODIFIER
 #undef REFPROP_IMPLEMENTATION
+
 #include <stdlib.h>
 #include <stdio.h>
 
