@@ -229,6 +229,7 @@ std::size_t REFPROP_address();
     X(SETUPdll) \
     X(SPLNROOTdll) \
     X(SPLNVALdll) \
+    X(STNdll) \
     X(SUBLPdll) \
     X(SUBLTdll) \
     X(SURFTdll) \
@@ -459,6 +460,7 @@ extern "C" {
     #define SETUPdll_ARGS INT_REF,char *,char *,char *,INT_REF,char *,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T,RP_SIZE_T
     #define SPLNROOTdll_ARGS INT_REF,INT_REF,DOUBLE_REF,DOUBLE_REF,INT_REF,char *,RP_SIZE_T
     #define SPLNVALdll_ARGS INT_REF,INT_REF,DOUBLE_REF,DOUBLE_REF,INT_REF,char *,RP_SIZE_T
+    #define STNdll_ARGS DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,INT_REF,char *,RP_SIZE_T
     #define SUBLPdll_ARGS DOUBLE_REF,double *,DOUBLE_REF,INT_REF,char *,RP_SIZE_T
     #define SUBLTdll_ARGS DOUBLE_REF,double *,DOUBLE_REF,INT_REF,char *,RP_SIZE_T
     #define SURFTdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,INT_REF,char *,RP_SIZE_T
