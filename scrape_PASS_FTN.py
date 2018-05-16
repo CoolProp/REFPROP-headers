@@ -35,4 +35,4 @@ if __name__=='__main__':
             else: 
                 print(types)
                 raise ValueError()
-        print('#define '+func+'_ARGS '+','.join(types+string_lengths))
+        print(' '*4+'#define '+func+'_ARGS '+','.join(types+string_lengths))
