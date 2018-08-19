@@ -65,8 +65,8 @@ def find_subroutine(lines, lineno):
             type = type[0:matches.start(0)]
 
         def get_dimension(intent_dimension):
-            nummatches = re.findall(r'dimension\(([0-9]*)\)', intent_dimension)
-            strmatches = re.findall(r'dimension\((\w*)\)', intent_dimension)
+            nummatches = re.findall(r'dimension\(+([0-9]*)\)+', intent_dimension)
+            strmatches = re.findall(r'dimension\(+(\w*)\)+', intent_dimension)
             if nummatches:
                 return nummatches[0]
             elif strmatches:
