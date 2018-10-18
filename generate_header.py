@@ -173,7 +173,10 @@ if __name__=='__main__':
     args = parser.parse_args()
 
     # Change these paths as needed
-    generate_interface_file(os.path.join(args.FORTRAN_path[0],'PASS_FTN.FOR'), 'REFPROP.pyf', python_exe = args.python_exe[0])
+    try:
+        generate_interface_file(os.path.join(args.FORTRAN_path[0],'PASS_FTN.FOR'), 'REFPROP.pyf', python_exe = args.python_exe[0])
+    except:
+        generate_interface_file(os.path.join(args.FORTRAN_path[0],'DLLFILES','PASS_FTN.FOR'), 'REFPROP.pyf', python_exe = args.python_exe[0])
     dd = generate_function_dict('REFPROP.pyf')
 
     write_header(dd,'REFPROP.h')
