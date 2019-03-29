@@ -30,6 +30,7 @@
 #    define RPCALLCONV
 #endif
 
+#if defined(__cplusplus)
 // Function prototypes that are implemented below when REFPROP_IMPLEMENTATION macro is defined
 // before this header is included.  REFPROP_IMPLEMENTATION shall be implemented in ONLY ONE
 // compilation unit
@@ -37,6 +38,7 @@
 bool load_REFPROP(std::string &err, const std::string &shared_library_path = "", const std::string &shared_library_name = "");
 bool unload_REFPROP(std::string &err);
 std::size_t REFPROP_address();
+#endif
 
 // ******************************************
 // ******************************************
