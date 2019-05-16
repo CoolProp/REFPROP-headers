@@ -761,8 +761,7 @@ extern "C" {
                 // Error handling
                 if (RefpropdllInstance == NULL) 
                 {
-                    char *errstr = NULL;
-                    errstr = dlerror();
+                    const char *errstr = dlerror();
                     if (errstr != NULL) 
                     {
                         msg = errstr;
@@ -811,8 +810,7 @@ extern "C" {
 #elif (defined(__RPISLINUX__) || defined(__RPISAPPLE__))
             if (dlclose(RefpropdllInstance) != 0) 
             {
-                char *errstr = NULL;
-                errstr = dlerror();
+                const char* errstr = dlerror();
                 if (errstr != NULL) 
                 {
                     err = errstr;
