@@ -10,24 +10,28 @@
 #include <stdio.h>
 
 // Prototype from the other file
-void another_file(void);
+void another_file(const std::string &, const std::string &);
 
 int main()
 {
+    // You may need to change this path to suit your installation
+    // Note: forward-slashes are recommended.
+    std::string path = "D:/Program Files (x86)/REFPROP";
+    std::string DLL_name = "REFPRP64.dll";
 
     // Call a function in another file (and load the DLL, and then unload it)
-    another_file();
+    another_file(path, DLL_name);
 
     // Load the shared library
     std::string err;
-    bool loaded_REFPROP = load_REFPROP(err, "D:/Code/PhiFit/_private/veric", "REFPRP64.DLL");
+    
+    bool loaded_REFPROP = load_REFPROP(err, path, DLL_name);
     printf("Loaded refprop (in main.cpp): %s @ address %zu\n", loaded_REFPROP ? "true" : "false", REFPROP_address());
     if (!loaded_REFPROP){
         return EXIT_FAILURE;
     }
  
-    char mypath[] = "D:/Code/PhiFit/_private/veric";
-    SETPATHdll(mypath, 400);
+    SETPATHdll(const_cast<char*>(path.c_str()), 400);
 
     int ierr = 0, nc = 1;
     char herr[255], hfld[] = "AMMONIA|WATER", hhmx[] = "HMX.BNC", href[] = "DEF";
@@ -51,7 +55,7 @@ int main()
     }
 
     // Call a function in another file (and load the DLL, and then unload it)
-    another_file();
+    another_file(path, DLL_name);
 
     return EXIT_SUCCESS;
 }

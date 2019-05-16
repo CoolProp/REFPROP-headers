@@ -3,12 +3,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-void another_file()
+void another_file(const std::string & path, const std::string &DLL_file)
 {
 
     // Load the shared library
     std::string err;
-    bool loaded_REFPROP = load_REFPROP(err, "D:/Code/PhiFit/_private/veric", "REFPRP64.DLL");
+    bool loaded_REFPROP = load_REFPROP(err, path, DLL_file);
     printf("Loaded refprop (in other.cpp): %s @ address %zu\n", loaded_REFPROP ? "true" : "false", REFPROP_address());
 
     int ierr = 0, nc = 1;
