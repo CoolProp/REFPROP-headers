@@ -10,6 +10,8 @@ def generate_interface_file(REFPROP_FORTRAN_path, interface_file_path, verbose =
     from subprocess import Popen, PIPE
     print('Writing the .pyf file with numpy.f2py, please be patient...')
     args = [python_exe,'-m','numpy.f2py','--quiet','--no-lower','-h',interface_file_path,REFPROP_FORTRAN_path]
+    print('About to run:', ' '.join(args))
+    print('numpy version:', subprocess.check_output(' '.join([python_exe,'-c','"import numpy; print(numpy.__version__)"']), shell=True).strip().decode('ascii'))
     # Force an overwrite if the PYF target is older than the PASS_FTN.FOR
     if os.path.exists(interface_file_path) and os.path.getmtime(interface_file_path) < os.path.getmtime(REFPROP_FORTRAN_path):
         print('The .PYF file file is older; will be over-written')
