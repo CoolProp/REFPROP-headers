@@ -96,6 +96,7 @@ std::size_t REFPROP_address();
     X(ABFL1dll) \
     X(ABFL2dll) \
     X(ABFLSHdll) \
+    X(ABFLASHdll) \
     X(AGdll) \
     X(ALLPROPS0dll) \
     X(ALLPROPS1dll) \
@@ -259,9 +260,11 @@ std::size_t REFPROP_address();
     X(VAPSPNDLdll) \
     X(VIRBAdll) \
     X(VIRBCDdll) \
+    X(VIRBCD12dll) \
     X(VIRBdll) \
     X(VIRCAdll) \
     X(VIRCdll) \
+    X(VIRTAUdll) \
     X(WMOLIdll) \
     X(WMOLdll) \
     X(XMASSdll) \
@@ -327,6 +330,7 @@ extern "C" {
     #define ABFL1dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,INT_REF,char *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,INT_REF,char *,RP_SIZE_T,RP_SIZE_T
     #define ABFL2dll_ARGS DOUBLE_REF,DOUBLE_REF,double *,INT_REF,INT_REF,char *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,INT_REF,char *,RP_SIZE_T,RP_SIZE_T
     #define ABFLSHdll_ARGS char *,DOUBLE_REF,DOUBLE_REF,double *,INT_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,INT_REF,char *,RP_SIZE_T,RP_SIZE_T
+    #define ABFLASHdll_ARGS char *,DOUBLE_REF,DOUBLE_REF,double *,INT_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,INT_REF,char *,RP_SIZE_T,RP_SIZE_T
     #define AGdll_ARGS DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF
     #define ALLPROPS0dll_ARGS INT_REF,int *,INT_REF,DOUBLE_REF,DOUBLE_REF,double *,double *,INT_REF,char *,RP_SIZE_T
     #define ALLPROPS1dll_ARGS char *,INT_REF,DOUBLE_REF,DOUBLE_REF,double *,DOUBLE_REF,INT_REF,char *,RP_SIZE_T,RP_SIZE_T
@@ -489,10 +493,12 @@ extern "C" {
     #define UNSETAGAdll_ARGS 
     #define VAPSPNDLdll_ARGS DOUBLE_REF,double *,DOUBLE_REF,INT_REF,char *,RP_SIZE_T
     #define VIRBAdll_ARGS DOUBLE_REF,double *,DOUBLE_REF
+    #define VIRBCD12dll_ARGS DOUBLE_REF,double *,INT_REF,double *,double *,double *,double *
     #define VIRBCDdll_ARGS DOUBLE_REF,double *,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF,DOUBLE_REF
     #define VIRBdll_ARGS DOUBLE_REF,double *,DOUBLE_REF
     #define VIRCAdll_ARGS DOUBLE_REF,double *,DOUBLE_REF
     #define VIRCdll_ARGS DOUBLE_REF,double *,DOUBLE_REF
+    #define VIRTAUdll_ARGS DOUBLE_REF,double *,INT_REF,double *,double *,double *,double *,INT_REF,char *,RP_SIZE_T
     #define WMOLIdll_ARGS INT_REF,DOUBLE_REF
     #define WMOLdll_ARGS double *,DOUBLE_REF
     #define XMASSdll_ARGS double *,double *,DOUBLE_REF
