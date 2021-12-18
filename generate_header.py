@@ -175,10 +175,12 @@ if __name__=='__main__':
     args = parser.parse_args()
 
     # Change these paths as needed
-    try:
-        generate_interface_file(os.path.join(args.FORTRAN_path[0],'PASS_FTN.FOR'), 'REFPROP.pyf', python_exe = args.python_exe[0])
-    except:
-        generate_interface_file(os.path.join(args.FORTRAN_path[0],'DLLFILES','PASS_FTN.FOR'), 'REFPROP.pyf', python_exe = args.python_exe[0])
+    path_options = [os.path.join(args.FORTRAN_path[0],'PASS_FTN.FOR'), 
+                    os.path.join(args.FORTRAN_path[0],'DLLFILES','PASS_FTN.FOR')]
+    valid_paths = [path for path in path_options if os.path.exists(path)]
+    if len(valid_paths) != 1:
+        raise ValueError("Was not able to obtain a single valid path from the options: " + str(path_options))
+    generate_interface_file(valid_paths[0], 'REFPROP.pyf', python_exe = args.python_exe[0])
     dd = generate_function_dict('REFPROP.pyf')
 
     write_header(dd,'REFPROP.h')
