@@ -602,11 +602,17 @@ extern "C" {
     const std::string& get_shared_lib()
     {
 #if defined(__RPISWINDOWS__)
+    #if defined(_WIN64) || defined(__WIN64__)
+        return shared_lib_WIN64;
+    #elif defined(_WIN32) || defined(__WIN32__)
+        return shared_lib_WIN32;
+    #else
         if (sizeof(void*) == 8) { // Assume 64bit
             return shared_lib_WIN64;
         } else {
             return shared_lib_WIN32;
         }
+    #endif  
 #elif defined(__RPISLINUX__)
         return shared_lib_LINUX;
 #elif defined(__RPISAPPLE__)
