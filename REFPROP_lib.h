@@ -52,7 +52,7 @@ std::size_t REFPROP_address();
     #error REFPROP_IMPLEMENTATION can only be used in C++
     #endif
 
-    #if defined(__powerpc__)
+    #if defined(__RPISPOWERPC__)
         #include <cstring>
     #elif defined(__RPISLINUX__) || defined(__RPISAPPLE__)
         #include <cstring>
