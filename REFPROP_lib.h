@@ -762,7 +762,7 @@ extern "C" {
                     #ifndef UNICODE
                         msg = dllPath;
                     #else
-                        std::wstring wStr = t;
+                        std::wstring wStr = dllPath;
                         msg = std::string(wStr.begin(), wStr.end());
                     #endif
                     RPPath_loaded = msg;
