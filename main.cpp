@@ -33,7 +33,7 @@ int main()
  
     SETPATHdll(const_cast<char*>(path.c_str()), 400);
 
-    int ierr = 0, nc = 1;
+    int ierr = 0, nc = 2;
     char herr[255], hfld[10000] = "AMMONIA|WATER", hhmx[255] = "HMX.BNC", href[4] = "DEF";
     SETUPdll(nc,hfld,hhmx,href,ierr,herr,10000,255,3,255);
     if (ierr > 0) printf("This ierr: %d herr: %s\n", ierr, herr);
