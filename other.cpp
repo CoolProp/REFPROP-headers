@@ -11,6 +11,9 @@ void another_file(const std::string & path, const std::string &DLL_file)
     bool loaded_REFPROP = load_REFPROP(err, path, DLL_file);
     printf("Loaded refprop (in other.cpp): %s @ address %zu\n", loaded_REFPROP ? "true" : "false", REFPROP_address());
 
+    // Set the loading path
+    SETPATHdll(const_cast<char*>(path.c_str()), 400);
+
     int ierr = 0, nc = 1;
     char herr[255], hfld[10000] = "R32.FLD", hhmx[255] = "HMX.BNC", href[255] = "DEF";
     SETUPdll(nc,hfld,hhmx,href,ierr,herr,10000,255,3,255);
